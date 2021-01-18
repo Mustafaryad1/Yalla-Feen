@@ -1,0 +1,23 @@
+{
+  "name": "yallafeen",
+  "version": "1.0.0",
+  "description": "this is a trip recommendation system that help users to fit his trip",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mustafaryad1/Yalla-Feen.git"
+  },
+  "author": "['islam','mustafa','souad','salsable']",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mustafaryad1/Yalla-Feen/issues"
+  },
+  "homepage": "https://github.com/Mustafaryad1/Yalla-Feen#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.12"
+  }
+}
