@@ -10,13 +10,15 @@ const user_routes = require('./routes/user_routes')
 const app = express()
 app.use(bodyParser.json())
 
-//-----------------------------------------
+//------------------------------------------
 
 // app root routes
 app.get('/',(req,res)=>{
   res.send({'homepage':'this is home page'})
 })
-
+app.get('/potato',(req,res)=>{
+  res.send({'homepage':'this is potato'})
+})
 
 //-----------------------------------------
 // load routes
