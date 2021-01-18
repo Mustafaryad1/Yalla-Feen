@@ -1,14 +1,14 @@
 // Yalla Feen Libraries Requriments
 const express = require('express');
+const bodyParser = require('body-parser')
+
 const user_routes = require('./routes/user_routes')
 
 
 
-
 // config express app
-
 const app = express()
-app.set(express.json())
+app.use(bodyParser.json())
 
 //-----------------------------------------
 

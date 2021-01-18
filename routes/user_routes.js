@@ -15,11 +15,13 @@ router.get('/',(req,res)=>{
 router.get('/login',(req,res)=>{
   res.send({'login':'this is login get page'})
 });
+
 router.post('/login',(req,res)=>{
   res.send({'login':'this is login post page',
-             'data':'login data'+req.body
+             'data':'login data'+req.body.email
               })
 });
+
 //-------------------------------------------------------
 
 // yalla feen signup [get and post] methods
