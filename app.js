@@ -1,7 +1,7 @@
 // Yalla Feen Libraries Requriments
 const express = require('express');
 const bodyParser = require('body-parser')
-
+const mongoose = require('mongoose')
 const user_routes = require('./routes/user_routes')
 
 
@@ -11,6 +11,10 @@ const app = express()
 app.use(bodyParser.json())
 
 //------------------------------------------
+// config mongodb
+const mongodbURI = 'mongodb://localhost:27017/yallafeen'
+mongoose.connect(mongodbURI, {useNewUrlParser: true});
+//-------------------------------------------
 
 // app root routes
 app.get('/',(req,res)=>{

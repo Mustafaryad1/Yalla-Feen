@@ -1,5 +1,6 @@
 const router = require('express').Router();
 
+const User = require('../models/user_model');
 
 // yalla feen profile get methods
 router.get('/',(req,res)=>{
@@ -25,11 +26,19 @@ router.post('/login',(req,res)=>{
 //-------------------------------------------------------
 
 // yalla feen signup [get and post] methods
-router.get('/signup',(req,res)=>{
-  res.send({'signup':'this is signup get page'})
+router.post('/signup',async (req,res)=>{
+  try{
+  const {email,username,password}= req.body;
+  let user = await User.create({email:email,username:username});
+  user.setPassword(password);
+  user.save();
+  res.send({user})
+  }catch(err){
+    console.log(err);
+  }
 });
 
-router.post('/signup',(req,res)=>{
+router.get('/signup',(req,res)=>{
   res.send({'signup':'this is signup post page',
              'data':'signup data'+req.body
               })
