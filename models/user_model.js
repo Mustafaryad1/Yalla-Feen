@@ -77,6 +77,23 @@ UserSchema.methods.toAuthJSON = function(){
   };
 
 
+// static method to login user
+UserSchema.statics.login = async function(email, password) {
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await user.validPassword(password);
+    console.log(password,user.hash);
+    console.log(auth);
+    if (auth) {
+      return user;
+    }
+    throw Error('incorrect password');
+  }
+  throw Error('incorrect email');
+};
+
+
+
 
 const User = mongoose.model('User', UserSchema, 'yalla_feen_users');
 

@@ -36,49 +36,36 @@ const handleErrors = (err) => {
 }
 
 
-
-// controller actions
-module.exports.signup_get = (req, res) => {
-  res.render('signup');
+// user profile 
+module.exports.profile = (req, res) => {
+  res.send('this is user profile ');
 }
 
-module.exports.login_get = (req, res) => {
-  res.render('login');
-}
-
+// signup api method
 module.exports.signup_post = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.create({ email, password });
-    const token = createToken(user._id);
-    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(201).json({ user: user._id });
-  }
-  catch(err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
-  }
+  try{
+    const {email,username,password}= req.body;
+    let user = await User.create({email:email,username:username});
+    user.setPassword(password);
+    user.save();
+    res.send({user})
+    }catch(err){
+      console.log(err);
+    }
  
 }
 
+// login method[POST]  user/login
+ 
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.login(email, password);
-    const token = createToken(user._id);
-    res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-    res.status(200).json({ user: user._id });
+    res.status(200).json({ user: user._id ,token:user.generateJWT()});
   } 
   catch (err) {
-    const errors = handleErrors(err);
-    res.status(400).json({ errors });
+    // const errors = handleErrors(err);
+    res.status(400).json({ error:err.message });
   }
 
-}
-
-module.exports.logout_get = (req, res) => {
-  res.cookie('jwt', '', { maxAge: 1 });
-  res.redirect('/');
 }
