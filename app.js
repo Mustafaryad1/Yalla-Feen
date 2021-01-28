@@ -23,6 +23,9 @@ app.get('/',(req,res)=>{
 app.get('/potato',(req,res)=>{
   res.send({'homepage':'this is potato'})
 })
+app.get('/potato2',(req,res)=>{
+  res.send({'homepage':'this is potato2'})
+})
 
 //-----------------------------------------
 // load routes

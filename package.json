@@ -4,7 +4,8 @@
   "description": "this is a trip recommendation system that help users to fit his trip",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "supervisor app.js"
   },
   "repository": {
     "type": "git",
