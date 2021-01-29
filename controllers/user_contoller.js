@@ -40,7 +40,11 @@ const handleErrors = (err) => {
 module.exports.profile = (req, res) => {
   res.send('this is user profile ');
 }
-
+// get users 
+module.exports.get_users = async(req,res)=>{
+  const users = await User.find({});
+  res.send({usersData:users})
+}
 // signup api method
 module.exports.signup_post = async (req, res) => {
   try{
