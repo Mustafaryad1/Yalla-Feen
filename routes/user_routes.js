@@ -1,10 +1,11 @@
 const router = require('express').Router();
-const {requireAuth} = require('../middleware/authMiddleware')
+const {requireAuth,grantAccess} = require('../middleware/authMiddleware')
 const authController = require('../controllers/user_contoller')
 
 // user routes include signup and login methods 
 // /user 
-router.get('/',requireAuth,authController.profile)
+router.get('/',requireAuth,grantAccess('readOwn','profile'),authController.profile);
+router.get('/list',requireAuth,grantAccess('readAny','users'),authController.get_users);
 router.post('/signup',authController.signup_post);
 router.post('/login',authController.login_post);
 

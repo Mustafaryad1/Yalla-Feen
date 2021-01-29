@@ -25,7 +25,8 @@ const UserSchema = new mongoose.Schema({
 
   role: {
     type: String,
-    maxlength: [5, '']
+    default:"basic",
+    enum:["basic","supervisor","admin"]
   },
   isactive:{
     type:Boolean,
@@ -72,7 +73,8 @@ UserSchema.methods.toAuthJSON = function(){
       email: this.email,
       token: this.generateJWT(),
       bio: this.bio,
-      image: this.image
+      image: this.image,
+      role: this.role
     };
   };
 
