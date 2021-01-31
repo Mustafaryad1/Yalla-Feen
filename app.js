@@ -10,6 +10,7 @@ const user_routes = require('./routes/user_routes')
 const place_routes = require('./routes/placeRoutes')
 const comment_routes = require('./routes/commentRoutes')
 const category_routes = require('./routes/category_routes')
+const favorite_routes= require('./routes/favorite_routes')
 
 // config express app
 const app = express()
@@ -34,6 +35,7 @@ app.use('/user',user_routes)
 app.use('/place',place_routes)
 app.use('/comment',comment_routes)
 app.use('/category',category_routes)
+app.use('/favorite',favorite_routes)
 
 //
 
