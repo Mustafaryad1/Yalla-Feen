@@ -13,8 +13,9 @@ app.use(cors())
 
 //------------------------------------------
 // config mongodb
-const mongodbURI = 'mongodb://localhost:27017/yallafeen'
-mongoose.connect(mongodbURI, {useNewUrlParser: true,useUnifiedTopology: true});
+// const mongodbURI = 'mongodb://localhost:27017/yallafeen'
+
+mongoose.connect(parsed.mongodbURI, {useNewUrlParser: true,useUnifiedTopology: true});
 //-------------------------------------------
 
 // app root routes

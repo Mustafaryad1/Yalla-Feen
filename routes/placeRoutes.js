@@ -1,14 +1,11 @@
 const router = require("express").Router();
 const placeControllers = require("../controllers/place_controllers");
 
-router.get("/", placeControllers.place_get);
-router.get("/", placeControllers.place_get);
-router.post("/details", placeControllers.place_details_post);
-router.put("/:id", placeController.update);
-router.delete("/place/:id", (req, res, next) => {
-  Place.findOneAndDelete({ _id: req.params.id })
-    .then((data) => res.json(data))
-    .catch(next);
-});
+router.get("/places", placeControllers.getAllPlaces);
+router.post("/addplace", placeControllers.addPlace);
+// router.get("/details/:id", placeControllers.getPlacesDetails);
+router.put("/:id", placeControllers.updatePlace);
+router.delete("/delete/:id", placeControllers.deletePlace);
+
 
 module.exports = router;
