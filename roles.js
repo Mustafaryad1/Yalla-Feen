@@ -17,6 +17,7 @@ ac.grant("admin")
  .updateAny("profile")
  .deleteAny("profile")
  .readAny("users")
+ .readAny('comments')
 
 return ac;
 })();
