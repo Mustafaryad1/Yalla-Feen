@@ -9,6 +9,7 @@ const parsed = require('dotenv').config().parsed
 const user_routes = require('./routes/user_routes')
 const place_routes = require('./routes/placeRoutes')
 const comment_routes = require('./routes/commentRoutes')
+const category_routes = require('./routes/category_routes')
 
 // config express app
 const app = express()
@@ -26,18 +27,14 @@ mongoose.connect(parsed.mongodbURI, {useNewUrlParser: true,useUnifiedTopology: t
 app.get('/',(req,res)=>{
   res.send({'homepage':'this is home page'})
 })
-app.get('/potato',(req,res)=>{
-  res.send({'homepage':'this is potato'})
-})
-app.get('/potato2',(req,res)=>{
-  res.send({'homepage':'this is potato2'})
-})
 
 //-----------------------------------------
 // load routes
 app.use('/user',user_routes)
 app.use('/place',place_routes)
 app.use('/comment',comment_routes)
+app.use('/category',category_routes)
+
 //
 
 
