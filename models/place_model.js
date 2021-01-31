@@ -8,7 +8,7 @@ const PlaceSchema = new Schema(
     description: { type: String, required: true },
     location: { type: String, required: true },
     type: { type: String, required: true },
-    tags: ["see food"],
+    tags: ["see food"], 
     workStart: { type: Date },
     workEnd: { type: Date },
     vistorType: ["family", "single", "friends", "groupe"],
