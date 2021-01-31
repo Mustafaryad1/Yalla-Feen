@@ -37,10 +37,10 @@ getAllCategoryes = async (req, res) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }
-    if (!category.length) {
+    if (!categoryes.length) {
       return res.status(404).json({ success: false, error: `Category not found` });
     }
-    return res.status(200).json({ success: true, data: category });
+    return res.status(200).json({ success: true, data: categoryes });
   }).catch((err) => console.log(err));
 };
 
