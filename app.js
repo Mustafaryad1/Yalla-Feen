@@ -2,10 +2,14 @@
 const express = require('express');
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const user_routes = require('./routes/user_routes')
 const cors = require('cors')
-const place_routes = require('./routes/placeRoutes')
 const parsed = require('dotenv').config().parsed
+
+// routes
+const user_routes = require('./routes/user_routes')
+const place_routes = require('./routes/placeRoutes')
+const comment_routes = require('./routes/commentRoutes')
+
 // config express app
 const app = express()
 app.use(bodyParser.json())
@@ -32,9 +36,8 @@ app.get('/potato2',(req,res)=>{
 //-----------------------------------------
 // load routes
 app.use('/user',user_routes)
-//-------------
-//
 app.use('/place',place_routes)
+app.use('/comment',comment_routes)
 //
 
 
