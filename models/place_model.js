@@ -20,6 +20,15 @@ const PlaceSchema = new Schema(
        type: String,
        required: true 
       },
+    comments:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Comment"
+      }],
+    owner:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"User",
+      required:true
+    },
     tags: [{
       type:String
     }],
