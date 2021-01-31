@@ -67,7 +67,10 @@ const getAllPlaces = async (req, res) => {
     });
   }).catch((err) => console.log(err));
 };
-
+const getPlaceDetails = async (req, res) => {
+  const result = await Place.findById(req.params.id);
+  res.send(result);
+};
 const updatePlace = async (req, res) => {
   let {
     ...data
@@ -130,12 +133,11 @@ const addCommentToPlace = async (req, res) => {
 
 }
 
-
-
 module.exports = {
   addPlace,
   getAllPlaces,
   updatePlace,
   deletePlace,
-  addCommentToPlace
+  addCommentToPlace,
+  getPlaceDetails
 };

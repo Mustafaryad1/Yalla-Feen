@@ -29,6 +29,11 @@ const PlaceSchema = new Schema(
       ref:"User",
       required:true
     },
+
+    favorites_count:{
+      type:Number,
+      default:0,
+    },
     tags: [{
       type:String
     }],
