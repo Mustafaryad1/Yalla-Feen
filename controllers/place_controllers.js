@@ -1,52 +1,52 @@
 const Place = require("../models/place_model");
 
 addPlace = (req, res) => {
-  // const body = req.body;
-  // if (!body) {
-  //   return res.status(400).json({
-  //     success: false,
-  //     error: "You must add place",
-  //   });
-  // }
+  const body = req.body;
+  if (!body) {
+    return res.status(400).json({
+      success: false,
+      error: "You must add place",
+    });
+  }
 
-  // const place = new Place(body);
+  const place = new Place(body);
 
-  // if (!place) {
-  //   return res.status(400).json({ success: false, error: err });
-  // }
+  if (!place) {
+    return res.status(400).json({ success: false, error: err });
+  }
 
-  // place
-  //   .save()
-  //   .then(() => {
-  //     return res.status(200).json({
-  //       success: true,
-  //       id: place._id,
-  //       message: "Place item created",
-  //     });
-  //   })
-  //   .catch((error) => {
-  //     return res.status(400).json({
-  //       error,
-  //       message: "Place item not created",
-  //     });
-  //   });
-  Place.create({
-    title: req.body.title,
-    description: req.body.description,
-    location: req.body.location,
-    type: req.body.type,
-    tags: req.body.tags,
-    workStart: req.body.workStart,
-    workEnd: req.body.workEnd,
-    vistorType: req.body.vistorType,
-    budgetType: req.body.budgetType,
-    phone: req.body.phone,
-    placeImages: req.body.placeImages,
-},
-(err, place) => {
-    if (err) res.status(500).send(err)
-    res.status(200).send(place)
-})
+  place
+    .save()
+    .then(() => {
+      return res.status(200).json({
+        success: true,
+        id: place._id,
+        message: "Place item created",
+      });
+    })
+    .catch((error) => {
+      return res.status(400).json({
+        error,
+        message: "Place item not created",
+      });
+    });
+//   Place.create({
+//         title: req.body.title,
+//         description: req.body.description,
+//         location: req.body.location,
+//         type: req.body.type,
+//         tags: req.body.tags,
+//         workStart: req.body.workStart,
+//         workEnd: req.body.workEnd,
+//         vistorType: req.body.vistorType,
+//         budgetType: req.body.budgetType,
+//         phone: req.body.phone,
+//         placeImages: req.body.placeImages,
+//     },
+//     (err, place) => {
+//         if (err) res.status(500).send(err)
+//         res.status(200).send(place)
+//     })
 };
 
 getAllPlaces = async (req, res) => {
