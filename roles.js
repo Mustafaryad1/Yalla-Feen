@@ -3,16 +3,16 @@ const AccessControl = require("accesscontrol");
 const ac = new AccessControl();
 
 exports.roles = (function() {
-ac.grant("basic")
+ac.grant("user")
  .readOwn("profile")
  .updateOwn("profile")
 
 ac.grant("agancy")
- .extend("basic")
+ .extend("user")
  .readAny("profile")
 
 ac.grant("admin")
- .extend("basic")
+ .extend("user")
  .extend("agancy")
  .updateAny("profile")
  .deleteAny("profile")
