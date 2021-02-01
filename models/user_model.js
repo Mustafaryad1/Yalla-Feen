@@ -41,7 +41,9 @@ const UserSchema = new mongoose.Schema({
 
   favorite_places:[{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"Favorite"
+    ref:"Place",
+    unique:true
+   
   }],
   
 

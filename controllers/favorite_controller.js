@@ -1,52 +1,63 @@
-const Favorite = require('../models/favorite_model');
+const Place = require('../models/place_model');
+const User = require('../models/user_model');
 
-exports.createFavorite = (req,res)=>{
-  const body = req.body;
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: "You must add Favorite",
-    });
+const addFavorite = async (req,res)=>{
+  try{
+    const place_id = req.params.place_id;
+    const user = req.user;
+    const place = await Place.findById(place_id)
+    const exist = user.favorite_places.filter(
+      user_place_id => user_place_id.toString() === place_id)
+
+    if (exist.length<1){
+      user.favorite_places.push(place._id);
+      user.save()
+      place.favorites_count ++;
+      place.save()
+    }else{
+      res.send({success:false,message:"place exists in favorites"})
+    }
+
+   res.send({success:true,message:"place has been added to favorites"})
+
+  }catch(err){
+    res.send(err)
   }
-  
-  const favorite = new Favorite(body);
-  if (!favorite) {
-    return res.status(400).json({ success: false, error: err });
-  }
-  favorite.user=req.user._id;
-  favorite
-    .save()
-    .then((favorite) => {
-      console.log(favorite.populate('user'));
-      return res.status(200).json({
-        success: true,
-        id: favorite._id,
-        message: "favorite item created",
-      });
-    })
-    .catch((error) => {
-      return res.status(400).json({
-        error,
-        message: "favorite item not created",
-      });
-    });
-}
 
-exports.getUserFavorites = async(req,res)=>{
-  
-  const favorites = await Favorite.find({user:req.user._id}).populate({path:'user',select:'username'}).exec()
-  res.send({favorites});
-}
+};
+
+
+const getUserFavorites = async(req,res)=>{
+
+  const user = await User.findById(req.user.id).populate({path:"favorite_places",select:"title"}).exec();
+  res.send({favorites_places:user.favorite_places})
+
+};
 
 
 
-exports.deleteFavorite = async(req,res)=>{
-  const favorite_id = req.params.id;
-  const favorite = await Favorite.findById(favorite_id);
-  if(req.user._id.toString() === favorite.user.toString()){
-    console.log('ok your are the person who create favorite');
-  }else{
-    res.send({baduser:"this is not your favorite"})
-  }
-  res.send({favorite})
-}
+const removeFavorite = async(req,res)=>{
+    try{
+      const place_id = req.params.place_id;
+      const user = req.user;
+      const place =await Place.findById(place_id)
+      const exist = user.favorite_places.filter(
+        user_place_id => user_place_id.toString() === place_id)
+      console.log(exist)
+      if(exist.length < 1){
+        console.log(place.favorites_count)
+        return res.send({success:false,message:"place does not exist"})
+      }else{
+      user.favorite_places.pull(place_id)
+      user.save()
+      place.favorites_count --;
+      place.save()
+      }
+      res.send({success:true,message:"place has been removed from favorite places"})
+    }catch(err){
+      res.send(err)
+    }
+};
+
+
+module.exports = {addFavorite,getUserFavorites,removeFavorite}

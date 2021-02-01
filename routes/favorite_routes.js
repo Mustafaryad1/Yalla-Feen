@@ -4,9 +4,9 @@ const favoriteControllers = require('../controllers/favorite_controller');
 
 // favorites Routes
 
-router.post('/create',requireAuth,favoriteControllers.createFavorite);
+router.post('/add/:place_id',requireAuth,favoriteControllers.addFavorite);
 router.get('/list',requireAuth,favoriteControllers.getUserFavorites);
-router.get('/delete/:id',requireAuth,favoriteControllers.deleteFavorite);
+router.delete('/remove/:place_id',requireAuth,favoriteControllers.removeFavorite);
 
 
 
