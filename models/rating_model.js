@@ -9,7 +9,7 @@ const Rating = mongoose.model(
       required:true
     },
     rate_value: {
-        type:Number,
+        type:[0,1,2,3,4,5],
         default:0,
         required:true
       }
