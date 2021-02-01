@@ -36,11 +36,11 @@ const handleErrors = (err) => {
 }
 
 
-// user profile 
+// user profile
 module.exports.profile = (req, res) => {
   res.send('this is user profile ');
 }
-// get users 
+// get users
 module.exports.get_users = async(req,res)=>{
   const users = await User.find({});
   res.send({usersData:users})
@@ -48,25 +48,25 @@ module.exports.get_users = async(req,res)=>{
 // signup api method
 module.exports.signup_post = async (req, res) => {
   try{
-    const {email,username,password}= req.body;
-    let user = await User.create({email:email,username:username});
+    const {password}= req.body;
+    let user = await User.create(req.body);
     user.setPassword(password);
     user.save();
     res.send({user})
     }catch(err){
-      console.log(err);
+      res.send(err);
     }
- 
+
 }
 
 // login method[POST]  user/login
- 
+
 module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
     res.status(200).json({ user: user._id ,token:user.generateJWT()});
-  } 
+  }
   catch (err) {
     // const errors = handleErrors(err);
     res.status(400).json({ error:err.message });
