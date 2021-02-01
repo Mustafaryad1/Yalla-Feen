@@ -39,6 +39,12 @@ const UserSchema = new mongoose.Schema({
     index: true
   },
 
+  favorite_places:[{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:"Favorite"
+  }],
+  
+
   role: {
     type: String,
     default: "user",
