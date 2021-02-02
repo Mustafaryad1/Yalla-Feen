@@ -16,6 +16,13 @@ const favorite_routes= require('./routes/favorite_routes')
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
+// serve static 
+app.use(express.static('uploads'));
+// user Images
+app.use('/user-images', express.static(__dirname + '/uploads/user'));
+// place Images
+app.use('/place-images', express.static(__dirname + '/uploads/place'));
+
 
 //------------------------------------------
 // config mongodb

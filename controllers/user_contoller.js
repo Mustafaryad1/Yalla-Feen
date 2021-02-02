@@ -1,6 +1,6 @@
 const User = require("../models/user_model");
 const jwt = require('jsonwebtoken');
-
+const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
 // handle errors
 const handleErrors = (err) => {
   console.log(err.message, err.code);
@@ -38,7 +38,9 @@ const handleErrors = (err) => {
 
 // user profile
 module.exports.profile = (req, res) => {
-  res.send('this is user profile ');
+  // console.log(parsed);
+  req.user.avatar = userImagesURL+req.user.avatar
+  res.send({profile:req.user});
 }
 // get users
 module.exports.get_users = async(req,res)=>{

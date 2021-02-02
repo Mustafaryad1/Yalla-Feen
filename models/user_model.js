@@ -38,7 +38,10 @@ const UserSchema = new mongoose.Schema({
     match: [/\S+@\S+\.\S+/, 'is invalid'],
     index: true
   },
-
+  avatar:{
+    type:String,
+    default:"avatar.jpg"
+  },
   favorite_places:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:"Place",
