@@ -29,7 +29,7 @@ const grantAccess = (action,resource)=>{
   return (req,res,next)=>{
    try{
       console.log('-------------------user-------------')
-      // console.log(id);
+      console.log(req.user);
       console.log(req.user.role);
       const permission = roles.can(req.user.role)[action](resource);
       if (!permission.granted) {

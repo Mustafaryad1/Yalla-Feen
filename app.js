@@ -15,6 +15,10 @@ const favorite_routes= require('./routes/favorite_routes');
 // config express app
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+
 app.use(cors());
 // serve static 
 app.use(express.static('uploads'));
