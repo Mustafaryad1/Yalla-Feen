@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {requireAuth,grantAccess} = require('../middleware/authMiddleware')
 const authController = require('../controllers/user_contoller')
+const upload = require('../middleware/upload').upload
 
 // user routes include signup and login methods 
 // /user 

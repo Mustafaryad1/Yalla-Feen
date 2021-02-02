@@ -2,6 +2,8 @@ const User = require("../models/user_model");
 const jwt = require('jsonwebtoken');
 const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
 // handle errors
+const upload = require('../middleware/upload').uploadFile
+
 const handleErrors = (err) => {
   console.log(err.message, err.code);
   let errors = { email: '', password: '' };
@@ -50,10 +52,15 @@ module.exports.get_users = async(req,res)=>{
 // signup api method
 module.exports.signup_post = async (req, res) => {
   try{
+    // console.log(req);
+    console.log(req.body,req.text);
     const {password}= req.body;
     let user = await User.create(req.body);
     user.setPassword(password);
     user.save();
+    // await upload(req,res);
+    // user.avatar = (req.file)?req.file.filename:'avatar.jpg'
+    // log(req.file.filename)
     res.send({user})
     }catch(err){
       res.send(err);
