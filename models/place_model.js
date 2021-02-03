@@ -52,7 +52,7 @@ const PlaceSchema = new Schema(
     phone: { 
       type: String 
     },
-    placeImages: [{ type: String}],
+    images: [{ type: String}],
     // reviews: [
     //   {
     //     type: Array,

@@ -1,40 +1,51 @@
 const Place = require("../models/place_model");
 const Comment = require("../models/comment_model");
+const upload = require("../middleware/upload").upload
+const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL
 
 const addPlace = (req, res) => {
-  const body = req.body;
-  if (!body) {
-    return res.status(400).json({
-      success: false,
-      error: "You must add place",
-    });
-  }
-
-  const place = new Place(body);
-
-  if (!place) {
-    return res.status(400).json({
-      success: false,
-      error: err
-    });
-  }
-  place.owner = req.user._id;
-  place
-    .save()
-    .then(() => {
-      return res.status(200).json({
-        success: true,
-        id: place._id,
-        message: "Place item created",
-      });
-    })
-    .catch((error) => {
+  upload.array('images',12)(req,res,function(err){
+    if(err){
+      return res.status(400).send({
+          success:false,
+          message:"allowed files are images and size 2mb and max-files 12 image"})
+      }
+   
+    const body = JSON.parse(JSON.stringify(req.body));
+    if (!body) {
       return res.status(400).json({
-        error,
-        message: "Place item not created",
+        success: false,
+        error: "You must add place",
       });
-    });
-
+    }
+    // console.log(req.files);
+    const place = new Place(body);
+    for(item of req.files){
+      place.images.push(item.filename);
+    }
+    if (!place) {
+      return res.status(400).json({
+        success: false,
+        error: err
+      });
+    }
+    place.owner = req.user._id;
+    place
+      .save()
+      .then(() => {
+        return res.status(200).json({
+          success: true,
+          id: place._id,
+          message: "Place item created",
+        });
+      })
+      .catch((error) => {
+        return res.status(400).json({
+          error,
+          message: "Place item not created",
+        });
+      })
+  })
 };
 
 const getAllPlaces = async (req, res) => {
@@ -67,10 +78,15 @@ const getAllPlaces = async (req, res) => {
     });
   }).catch((err) => console.log(err));
 };
+
+
+
 const getPlaceDetails = async (req, res) => {
   const result = await Place.findById(req.params.id);
   res.send(result);
 };
+
+
 const updatePlace = async (req, res) => {
   let {
     ...data

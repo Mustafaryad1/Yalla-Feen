@@ -25,10 +25,12 @@ router.post('/images',(req,res)=>{
           message:"allowed files are images and size 2mb and max-files 12 image"})
       }
     console.log(req.files);
+    const body = JSON.parse(JSON.stringify(req.body));
+    console.log(body);
     res.send({success:true,message:"i got them"})
   })
   
  
 })
-
+ 
 module.exports = router;
