@@ -48,13 +48,19 @@ app.use('/comment',comment_routes);
 app.use('/category',category_routes);
 app.use('/favorite',favorite_routes);
 
+// test joi
+// const validation_body = require('./middleware/validationBody')
+// const test = require('./validation-schema/tset')
+// app.post('/test',validation_body(test.UserScehma),(req,res)=>{
+//   console.log('/update'); 
+//   res.json(req.body);
+// })
 
-
-app.get('/test',(req,res) => {
-    console.log(req);
-    res.send({success:true})
-});
-//
+// app.get('/test',(req,res) => {
+//     console.log(req);
+//     res.send({success:true})
+// });
+// //
 
 
 // run express app 

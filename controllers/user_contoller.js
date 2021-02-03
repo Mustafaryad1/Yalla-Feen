@@ -50,20 +50,15 @@ module.exports.get_users = async(req,res)=>{
 }
 // signup api method
 module.exports.signup_post = (req, res) => {
-  try{
-    const {password}= req.body;
-    let user = new  User(body);
+ try{
+    const {password} = req.body
+    const user = new User(req.body)
     user.setPassword(password);
-    console.log(req.file);
-
-    user.save().then(user=> res.send({success:true,message:"user has been created",
-                                      token:user.generateJWT()}))
-               .catch(err=>{res.send({success:false,err})});
-
-    }catch(err){
-      res.send(err);
-    }
-
+    user.save()
+    res.send({success:true,message:"user has been created",data:user.generateJWT()})
+ }catch(err){
+   res.send({success:false,message:"faild to create user"})
+ }
 }
 
 // login method[POST]  user/login

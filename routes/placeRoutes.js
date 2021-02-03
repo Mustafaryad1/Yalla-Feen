@@ -13,7 +13,7 @@ router.delete("/place/:id", (req, res, next) => {
     .catch(next);
 });
 
-// add comment to place
+// add comment to place/crate-comment/place_id
 router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace);
 
 // look at place images

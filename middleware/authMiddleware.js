@@ -18,6 +18,9 @@ const requireAuth =  (req, res, next) => {
       } else {
         // console.log(decodedToken);
         req.user = await User.findById(decodedToken.id)
+        if(!req.user){
+          res.send({success:false,message:"there is  no valid token exist"})
+        }
         // console.log("---------user-------(",req.user);
         next();
       }

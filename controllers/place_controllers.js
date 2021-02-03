@@ -1,3 +1,5 @@
+// joi 
+
 const Place = require("../models/place_model");
 const Comment = require("../models/comment_model");
 const Category = require("../models/category_model");
@@ -22,13 +24,10 @@ const addPlace = (req, res) => {
     }
     // console.log(req.files);
     const category = await Category.findOne({'title':body.category})
-    body.category = category._id
     if(!category){
-      return res.status(400).json({
-        success: false,
-        error: "category not found"
-      });
+      res.send({success:false,error:"category not found"})
     }
+    body.category = category._id
     const place = new Place(body);
     for(item of req.files){
       place.images.push(placeImageUrl+item.filename);
@@ -120,8 +119,12 @@ const deletePlace = async (req, res) => {
 
 const addCommentToPlace = async (req, res) => {
 
-  const place_id = req.params.id;
-  const place = await Place.findById(place_id)
+ 
+  const place = await Place.findById(req.params.id).catch(
+    err=> res.send({success:false,message: "place not exist"}
+    
+    ));
+  
   const body = req.body;
   if (!body) {
     return res.status(400).json({
@@ -140,7 +143,7 @@ const addCommentToPlace = async (req, res) => {
   comment
     .save()
     .then((comment) => {
-      place.comments.push(comment)
+      place.comments.push(comment._id)
       place.save();
       console.log(comment.populate('user'));
       return res.status(200).json({
