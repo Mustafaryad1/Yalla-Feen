@@ -6,7 +6,7 @@ const upload = require('../middleware/upload').upload
 // user routes include signup and login methods 
 // /user 
 router.get('/',requireAuth,grantAccess('readOwn','profile'),authController.profile);
-router.post('/upload-profile-pic',upload.single('avatar'),requireAuth,authController.uploadAvatar);
+router.post('/upload-profile-pic',requireAuth,authController.uploadAvatar);
 router.get('/list',requireAuth,grantAccess('readAny','users'),authController.get_users);
 router.post('/signup',authController.signup_post);
 router.post('/login',authController.login_post);

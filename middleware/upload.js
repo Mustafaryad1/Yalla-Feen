@@ -4,8 +4,8 @@ const util = require('util');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    // console.log('----------url',req.originalUrl);
-    if (req.originalUrl == '/user/signup') {
+    console.log('----------url',req.originalUrl);
+    if (req.originalUrl == '/user/upload-profile-pic') {
       // console.log('trueeeeeeeeee');
       return cb(null, 'uploads/user')
     }else{
@@ -28,8 +28,9 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage,
                        fileFilter: fileFilter,
                        limits:{
-                         fileSize:maxSize
-                      }});
+                       fileSize:maxSize
+                      },
+                    });
 
 // const uploadFile = util.promisify(upload.single('avatar'))
 module.exports = {upload}

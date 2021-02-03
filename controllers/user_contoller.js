@@ -1,7 +1,7 @@
 const User = require("../models/user_model");
 const jwt = require('jsonwebtoken');
 const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
-const upload = require('../middleware/upload').uploadFile
+const upload = require('../middleware/upload').upload
 
 // handle errors
 const handleErrors = (err) => {
@@ -88,14 +88,14 @@ module.exports.login_post = async (req, res) => {
 
 }
 module.exports.uploadAvatar = async(req,res) =>{
-  try{
-    
-  console.log(req.file);
-  const user = await User.findById(req.user._id);
-  user.avatar = req.file.filename;
-  user.save();
-  res.send({user})
-  }catch(err){
-    res.send({success:false,err})
-  }
+  upload.single('avatar')(req,res,err=>{
+    if(err){
+      return res.status(400).send({
+        success:false,
+        message:"allow file is image and size 2mb"})
+    }
+    req.user.avatar = req.file.filename
+    req.user.save()
+    res.send({message:"User profile update",sccuess:true})
+  })
 }
