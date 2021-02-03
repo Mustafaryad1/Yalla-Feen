@@ -40,7 +40,8 @@ const PlaceSchema = new Schema(
       default:0,
     },
     tags: [{
-      type:String
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Tags"
     }],
     workStart: {
       type: Date 
