@@ -3,7 +3,7 @@ const uniqueValidator = require('mongoose-unique-validator'); // to add unique p
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/key');
-
+const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar:{
     type:String,
-    default:"avatar.jpg"
+    default: userImagesURL+"avatar.jpg"
   },
   favorite_places:[{
     type:mongoose.Schema.Types.ObjectId,

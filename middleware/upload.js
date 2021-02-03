@@ -4,7 +4,7 @@ const util = require('util');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log('----------url',req.originalUrl);
+    // console.log('----------url',req.originalUrl);
     if (req.originalUrl == '/user/upload-profile-pic') {
       // console.log('trueeeeeeeeee');
       return cb(null, 'uploads/user')

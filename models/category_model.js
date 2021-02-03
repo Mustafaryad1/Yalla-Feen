@@ -5,15 +5,13 @@ const CategorySchema = new Schema(
   {
     title: {
       type: String,
+      unique:true,
       required: true 
       },
     description: { 
       type: String,
        required: true 
       },
-    tags: [{
-      type:String
-    }],
     categoryImage: {
         type: String 
     },

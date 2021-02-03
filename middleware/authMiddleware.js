@@ -6,19 +6,19 @@ const {roles} = require('../roles');
 
 const requireAuth =  (req, res, next) => {
   const token = req.headers['x-access-token']
-  console.log(token);
+  // console.log(token);
   // console.log('this token--------'+token);
   // check json web token exists & is verified
   if (token) { // token has id,role
     jwt.verify(token,keys.JWTSecret , async (err, decodedToken) => {
       if (err) {
-        console.log(err.message);
+        // console.log(err.message);
         res.redirect('/user/login');
         res.send({success:false,message:"this is not a valid token"})
       } else {
-        console.log(decodedToken);
+        // console.log(decodedToken);
         req.user = await User.findById(decodedToken.id)
-        console.log("---------user-------(",req.user);
+        // console.log("---------user-------(",req.user);
         next();
       }
     });
@@ -32,7 +32,7 @@ const grantAccess = (action,resource)=>{
   return (req,res,next)=>{
    try{
       console.log('-------------------user-------------')
-      console.log(req.user);
+      // console.log(req.user);
       console.log(req.user.role);
       const permission = roles.can(req.user.role)[action](resource);
       if (!permission.granted) {

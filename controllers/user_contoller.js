@@ -40,8 +40,7 @@ const handleErrors = (err) => {
 
 // user profile
 module.exports.profile = (req, res) => {
-  // console.log(parsed);
-  req.user.avatar = userImagesURL+req.user.avatar
+
   res.send({profile:req.user});
 }
 // get users
@@ -60,7 +59,7 @@ module.exports.signup_post = (req, res) => {
     user.save().then(user=> res.send({success:true,message:"user has been created",
                                       token:user.generateJWT()}))
                .catch(err=>{res.send({success:false,err})});
-               
+
     }catch(err){
       res.send(err);
     }
@@ -88,7 +87,7 @@ module.exports.uploadAvatar = async(req,res) =>{
         success:false,
         message:"allow file is image and size 2mb"})
     }
-    req.user.avatar = req.file.filename
+    req.user.avatar = userImagesURL+req.file.filename
     req.user.save()
     res.send({message:"User profile update",sccuess:true})
   })

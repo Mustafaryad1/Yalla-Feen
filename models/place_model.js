@@ -29,7 +29,12 @@ const PlaceSchema = new Schema(
       ref:"User",
       required:true
     },
-
+    category:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Category",
+      required:true
+    }
+    ,
     favorites_count:{
       type:Number,
       default:0,

@@ -1,10 +1,12 @@
 const Place = require("../models/place_model");
 const Comment = require("../models/comment_model");
-const upload = require("../middleware/upload").upload
-const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL
+const Category = require("../models/category_model");
+const upload = require("../middleware/upload").upload;
+const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
+
 
 const addPlace = (req, res) => {
-  upload.array('images',12)(req,res,function(err){
+  upload.array('images',12)(req,res,async function(err){
     if(err){
       return res.status(400).send({
           success:false,
@@ -19,9 +21,17 @@ const addPlace = (req, res) => {
       });
     }
     // console.log(req.files);
+    const category = await Category.findOne({'title':body.category})
+    body.category = category._id
+    if(!category){
+      return res.status(400).json({
+        success: false,
+        error: "category not found"
+      });
+    }
     const place = new Place(body);
     for(item of req.files){
-      place.images.push(item.filename);
+      place.images.push(placeImageUrl+item.filename);
     }
     if (!place) {
       return res.status(400).json({
@@ -59,24 +69,24 @@ const getAllPlaces = async (req, res) => {
       path:"user",
       select:"username"
     }
-  }).exec((err, places) => {
+  }).populate({path:'category',select:"title"}).exec((err, places) => {
     if (err) {
-      return res.status(400).json({
+      return res.status(400).send({
         success: false,
         error: err
       });
     }
     if (!places.length) {
-      return res.status(404).json({
+      return res.status(404).send({
         success: false,
         error: `Place not found`
       });
     }
-    return res.status(200).json({
+    return res.status(200).send({
       success: true,
       data: places
     });
-  }).catch((err) => console.log(err));
+  });
 };
 
 
