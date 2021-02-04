@@ -9,12 +9,9 @@ const place = require('../validation-schema/place')
 router.get("/", placeControllers.getAllPlaces);
 router.get("/details/:id", placeControllers.getPlaceDetails);
 router.post("/create", requireAuth,placeControllers.addPlace);
-router.put("/:id", placeControllers.updatePlace);
-router.delete("/place/:id", (req, res, next) => {
-  Place.findOneAndDelete({ _id: req.params.id })
-    .then((data) => res.json(data))
-    .catch(next);
-});
+router.put("/update/:id", placeControllers.updatePlace);
+
+router.delete("/delete/:id",placeControllers.deletePlace);
 
 // add comment to place/crate-comment/place_id
 router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace);

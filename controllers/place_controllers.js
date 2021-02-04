@@ -112,13 +112,16 @@ const updatePlace = async (req, res) => {
   res.send(result);
 };
 
-const deletePlace = async (req, res) => {
-  Place.findByIdAndDelete({
-      _id: req.params.id
+const deletePlace =  (req, res) => {
+  Place.findByIdAndDelete(req.params.id)
+    .then((data) => {
+      if(!data){
+        res.send({succes:false,message:"place not found"})
+      }
+      res.send({succes:true,message:"place deleted",data:data})
     })
-    .then((data) => res.json(data))
-    .catch(next);
-  res.send("Delete " + result);
+    .catch(err =>{res.send({succes:false,error:err})});
+  
 }
 
 const addCommentToPlace = async (req, res) => {
