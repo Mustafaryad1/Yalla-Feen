@@ -4,6 +4,7 @@ const Place = require("../models/place_model");
 const Comment = require("../models/comment_model");
 const Category = require("../models/category_model");
 const upload = require("../middleware/upload").upload;
+const Tags = require("../models/tags_model");
 const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 
 
@@ -169,11 +170,44 @@ const addCommentToPlace = async (req, res) => {
 
 }
 
+const addTagToPlace = async(req,res) =>{
+  const place = await Place.findById(req.params.id).catch(
+    err => res.send({success:false,message: "place not exist",errors:err}
+    
+    ));
+  const body = req.body
+  if(!body.title){
+    return res.status(400).json({
+      success: false,
+      error: "You must add Tag Name",
+    });
+  }
+  const tag = await Tags.findOne({'title':body.title})
+  // console.log(tag);
+  if(!tag){
+    // console.log(tag);
+   return res.send({success:false,message: "Tag not exist in tags "}
+  )}
+  
+  const exist = await place.tags.filter(
+    place_tag_id => place_tag_id.toString() === tag._id.toString())
+  if(exist.length !=0){
+   return res.send({success:false,message: "Tag  exist in place tags "})
+  }
+  place.tags.push(tag._id)
+  tag.places.push(place._id)
+  await place.save()
+  await tag.save()
+ 
+  res.send({success:true,message: "Tag has been added"})
+}
+
 module.exports = {
   addPlace,
   getAllPlaces,
   updatePlace,
   deletePlace,
   addCommentToPlace,
+  addTagToPlace,
   getPlaceDetails
 };

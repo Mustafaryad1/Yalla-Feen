@@ -17,6 +17,8 @@ router.delete("/delete/:id",placeControllers.deletePlace);
 
 // add comment to place/crate-comment/place_id
 router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace);
+// add tag to place
+router.post("/add-tag/:id",requireAuth,placeControllers.addTagToPlace);
 
 // // look at place images
 // router.post('/images',(req,res)=>{

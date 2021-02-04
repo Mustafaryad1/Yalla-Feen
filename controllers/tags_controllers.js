@@ -33,7 +33,7 @@ addTags = (req, res) => {
 };
 
 getAllTags = async (req, res) => {
-  await Tags.find({}, (err, tag) => {
+  await Tags.find({}, (err, tags) => {
     if (err) {
       return res.status(400).json({ success: false, error: err });
     }

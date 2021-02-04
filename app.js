@@ -11,6 +11,7 @@ const place_routes = require('./routes/placeRoutes');
 const comment_routes = require('./routes/commentRoutes');
 const category_routes = require('./routes/category_routes');
 const favorite_routes= require('./routes/favorite_routes');
+const tags_routes= require('./routes/tags_routes');
 
 // config express app
 const app = express();
@@ -47,6 +48,7 @@ app.use('/place',place_routes);
 app.use('/comment',comment_routes);
 app.use('/category',category_routes);
 app.use('/favorite',favorite_routes);
+app.use('/tags',tags_routes);
 
 // test joi
 // const validation_body = require('./middleware/validationBody')

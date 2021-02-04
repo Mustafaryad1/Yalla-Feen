@@ -49,12 +49,12 @@ module.exports.get_users = async(req,res)=>{
   res.send({usersData:users})
 }
 // signup api method
-module.exports.signup_post = (req, res) => {
+module.exports.signup_post = async(req, res) => {
  try{
     const {password} = req.body
     const user = new User(req.body)
     user.setPassword(password);
-    user.save()
+    await user.save()
     res.send({success:true,message:"user has been created",data:user.generateJWT()})
  }catch(err){
    res.send({success:false,message:"faild to create user"})
