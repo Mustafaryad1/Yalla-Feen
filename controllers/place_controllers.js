@@ -14,8 +14,9 @@ const addPlace = (req, res) => {
           success:false,
           message:"allowed files are images and size 2mb and max-files 12 image"})
       }
-   
+    
     const body = JSON.parse(JSON.stringify(req.body));
+
     if (!body) {
       return res.status(400).json({
         success: false,
@@ -29,15 +30,17 @@ const addPlace = (req, res) => {
     }
     body.category = category._id
     const place = new Place(body);
-    for(item of req.files){
-      place.images.push(placeImageUrl+item.filename);
-    }
     if (!place) {
       return res.status(400).json({
         success: false,
         error: err
       });
     }
+    if(req.files){
+    for(item of req.files){
+      place.images.push(placeImageUrl+item.filename);
+    }}
+   
     place.owner = req.user._id;
     place
       .save()
@@ -91,6 +94,7 @@ const getAllPlaces = async (req, res) => {
 
 
 const getPlaceDetails = async (req, res) => {
+  // console.log('im in place details');
   const result = await Place.findById(req.params.id);
   res.send(result);
 };
