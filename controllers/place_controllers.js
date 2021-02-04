@@ -3,8 +3,10 @@
 const Place = require("../models/place_model");
 const Comment = require("../models/comment_model");
 const Category = require("../models/category_model");
+const Rating = require("../models/rating_model");
 const upload = require("../middleware/upload").upload;
 const Tags = require("../models/tags_model");
+const { randomBytes } = require("crypto");
 const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 
 
@@ -210,7 +212,56 @@ const addTagToPlace = async(req,res) =>{
  
   res.send({success:true,message: "Tag has been added"})
 }
+// user place
 
+const addRatingToPlace = async(req,res)=>{
+  // console.log(req.user,req.params.id);
+    let place = await Place.findById(req.params.id).catch(err => {
+      res.send({success:false,message: "place not exist"});
+    }); // null in if !null==true  place
+    const place_user_rate = await Rating.findOne({user:req.user._id,place:req.params.id});
+
+    if(!req.body.rate_value){
+      res.send({success:false,message: "you should add rating value"});
+    }
+    let rates = 0
+    if(!place_user_rate){
+      const rating =  new Rating(req.body);
+      rating.user = req.user._id;
+      rating.place = place._id;
+      await rating.save().catch(err=>{res.send({err})})
+      place.rating.push(rating._id)
+      
+    for(rateid of place.rating){
+      ratedb= await Rating.findById(rateid);
+      // console.log(ratedb);
+      rates += ratedb.rate_value;
+      // console.log(rates)
+    }
+
+      rates = Math.ceil(rates/place.rating.length)
+      place.rates = rates
+      await place.save()
+      // res.send({place})
+    }
+    place_user_rate.rate_value = req.body.rate_value;
+
+    await place_user_rate.save().catch(err=> res.send({err}));
+
+    for(rateid of place.rating){
+      ratedb= await Rating.findById(rateid);
+      // console.log(ratedb);
+      rates += ratedb.rate_value;
+      // console.log(rates)
+    }
+    // console.log(rates,place.rating.length)
+    // console.log(rates/place.rating.length);
+    rates = Math.ceil(rates/place.rating.length);
+    place.rates = rates;
+    await place.save();
+    res.send({place});
+    
+}
 
 module.exports = {
   addPlace,
@@ -219,5 +270,6 @@ module.exports = {
   deletePlace,
   addCommentToPlace,
   addTagToPlace,
+  addRatingToPlace,
   getPlaceDetails
 };

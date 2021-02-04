@@ -8,6 +8,11 @@ const Rating = mongoose.model(
       ref:"User",
       required:true
     },
+    place: {
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Place",
+      required:true
+    },
     rate_value: {
         type:Number,
         default:0,

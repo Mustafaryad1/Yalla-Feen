@@ -17,8 +17,12 @@ router.delete("/delete/:id",placeControllers.deletePlace);
 
 // add comment to place/crate-comment/place_id
 router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace);
+
 // add tag to place
 router.post("/add-tag/:id",requireAuth,placeControllers.addTagToPlace);
+
+// add rating place/add-rating/place_id
+router.post("/add-rating/:id",requireAuth,placeControllers.addRatingToPlace);
 
 // // look at place images
 // router.post('/images',(req,res)=>{
