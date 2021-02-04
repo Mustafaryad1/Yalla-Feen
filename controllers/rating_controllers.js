@@ -10,7 +10,7 @@ addRating = (req, res) => {
   }
 
   const rating = new Rating(body);
-
+  rating.user = req.user._id
   if (!rating) {
     return res.status(400).json({ success: false, error: err });
   }
@@ -44,7 +44,7 @@ getRating = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-exports.updaterating = async(req,res)=>{
+updateRating = async(req,res)=>{
     const rating_id = req.params.id;
     const rating = await Rating.findById(rating_id);
     if(req.user._id.toString() === rating.user.toString()){
@@ -62,4 +62,9 @@ deleteRating = async (req, res) => {
     res.send("Delete " + result);
   }
 
-module.exports = { addRating, getRating, deleteRating };
+module.exports = { 
+    addRating,
+    getRating,
+    deleteRating,
+    updateRating 
+  };
