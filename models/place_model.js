@@ -33,8 +33,15 @@ const PlaceSchema = new Schema(
       type:mongoose.Schema.Types.ObjectId,
       ref:"Category",
       required:true
-    }
-    ,
+    },
+    rates:{
+        type:Number,
+        default:0
+    },
+    rating:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Rating"
+    }],
     favorites_count:{
       type:Number,
       default:0,

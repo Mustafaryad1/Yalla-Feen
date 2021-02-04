@@ -11,7 +11,8 @@ const Rating = mongoose.model(
     rate_value: {
         type:Number,
         default:0,
-        required:true
+        required:true,
+        enum:[0,1,2,3,4,5]
       }
   
   },{

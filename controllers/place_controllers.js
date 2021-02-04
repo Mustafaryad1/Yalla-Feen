@@ -72,7 +72,13 @@ const getAllPlaces = async (req, res) => {
       path:"user",
       select:"username"
     }
-  }).populate({path:'category',select:"title"}).exec((err, places) => {
+  }).populate({
+    path:'category',
+    select:"title"
+  }).populate({
+    path:'tags',
+    select:'title'
+  }).exec((err, places) => {
     if (err) {
       return res.status(400).send({
         success: false,
@@ -182,12 +188,15 @@ const addTagToPlace = async(req,res) =>{
       error: "You must add Tag Name",
     });
   }
-  const tag = await Tags.findOne({'title':body.title})
+  let tag = await Tags.findOne({'title':body.title}) // null or tag
   // console.log(tag);
   if(!tag){
     // console.log(tag);
-   return res.send({success:false,message: "Tag not exist in tags "}
-  )}
+  //  return res.send({success:false,message: "Tag not exist in tags "})
+    tag =  new Tags(body);
+    // console.log(tag)
+    await tag.save()
+  }
   
   const exist = await place.tags.filter(
     place_tag_id => place_tag_id.toString() === tag._id.toString())
@@ -201,6 +210,7 @@ const addTagToPlace = async(req,res) =>{
  
   res.send({success:true,message: "Tag has been added"})
 }
+
 
 module.exports = {
   addPlace,
