@@ -109,7 +109,13 @@ const getOwnerPlaces = async(req,res)=>{
       res.send({success:false,err})
     }
     res.send({places})
-  })
+  }).populate({
+    path:'comments',
+    select:['text','createdAt'],
+    populate:{
+        path:"user",
+        select:"username"}
+      }).populate().exec()
 
   
 }

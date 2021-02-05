@@ -14,7 +14,7 @@ const CategorySchema = new Schema(
       },
     categoryImage: {
         type: String 
-    },
+    }
   },
   { timestamps: true }
 );
