@@ -127,7 +127,7 @@ const getPlaceDetails = async (req, res) => {
     select:['text','createdAt'],
     populate:{
         path:"user",
-        select:"username"}
+        select:["username","avatar"]}
       }).populate().exec()
 ;
   res.send(result);
