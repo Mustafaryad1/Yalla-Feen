@@ -122,7 +122,14 @@ const getOwnerPlaces = async(req,res)=>{
 
 const getPlaceDetails = async (req, res) => {
   // console.log('im in place details');
-  const result = await Place.findById(req.params.id);
+  const result = await Place.findById(req.params.id).populate({
+    path:'comments',
+    select:['text','createdAt'],
+    populate:{
+        path:"user",
+        select:"username"}
+      }).populate().exec()
+;
   res.send(result);
 };
 
