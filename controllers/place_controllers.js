@@ -6,10 +6,10 @@ const Category = require("../models/category_model");
 const Rating = require("../models/rating_model");
 const upload = require("../middleware/upload").upload;
 const Tags = require("../models/tags_model");
-const { randomBytes } = require("crypto");
-const { find } = require("../models/place_model");
 const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 
+const { find } = require("../models/place_model");
+const { randomBytes } = require("crypto");
 
 const addPlace = (req, res) => {
   upload.array('images',12)(req,res,async function(err){

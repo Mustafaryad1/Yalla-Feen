@@ -1,6 +1,6 @@
 const Comment = require('../models/comment_model');
 
-exports.createComment = (req,res)=>{
+exports.createComment = (req, res) => {
   const body = req.body;
   if (!body) {
     return res.status(400).json({
@@ -8,12 +8,15 @@ exports.createComment = (req,res)=>{
       error: "You must add comment",
     });
   }
-  
+
   const comment = new Comment(body);
   if (!comment) {
-    return res.status(400).json({ success: false, error: err });
+    return res.status(400).json({
+      success: false,
+      error: err
+    });
   }
-  comment.user=req.user._id;
+  comment.user = req.user._id;
   comment
     .save()
     .then((comment) => {
@@ -32,30 +35,77 @@ exports.createComment = (req,res)=>{
     });
 }
 
-exports.getUserComments = async(req,res)=>{
-  
-  const comments = await Comment.find({user:req.user._id}).populate({path:'user',select:'username'}).exec()
-  res.send({comments})
+exports.getUserComments = async (req, res) => {
+
+  const comments = await Comment.find({
+    user: req.user._id
+  }).populate({
+    path: 'user',
+    select: 'username'
+  }).exec()
+  res.send({
+    comments
+  })
 }
 
-exports.updateComment = async(req,res)=>{
+exports.updateComment = async (req, res) => {
   const comment_id = req.params.id;
-  const comment = await Comment.findById(comment_id);
-  if(req.user._id.toString() === comment.user.toString()){
-    console.log('ok your are the person who create comment');
-  }else{
-    res.send({baduser:"this is not your comment"})
+  try {
+    const comment = await Comment.findById(comment_id)
+    if (req.user._id.toString() === comment.user.toString()) {
+      await Comment.findByIdAndUpdate({_id:comment_id},
+        req.body,
+        {new:true},
+        (err,place)=>{
+          if(err){
+          return res.status(500).send({success:false,message:err});
+          }
+          res.send({success:true,message:place})
+        })
+
+    } else {
+      res.send({
+        baduser: "this is not your comment"
+      })
+    }
+    res.send({
+      comment
+    })
+  } catch (err) {
+    res.status(404).send({
+      success: false,
+      message: "comment not found"
+    })
   }
-  res.send({comment})
 }
 
-exports.deleteComment = async(req,res)=>{
+exports.deleteComment = async (req, res) => {
   const comment_id = req.params.id;
-  const comment = await Comment.findById(comment_id);
-  if(req.user._id.toString() === comment.user.toString()){
-    console.log('ok your are the person who create comment');
-  }else{
-    res.send({baduser:"this is not your comment"})
+  try {
+    const comment = await Comment.findById(comment_id);
+    if (req.user._id.toString() === comment.user.toString()) {
+      await Comment.findByIdAndDelete({
+          _id: comment_id
+        })
+        .then(data => res.send({
+          success: true,
+          message: "comment has been deleted"
+        }))
+        .catch(err => res.send({
+          err
+        }))
+    } else {
+      res.send({
+        baduser: "this is not your comment"
+      })
+    }
+    res.send({
+      comment
+    })
+  } catch (err) {
+    res.status(404).send({
+      success: false,
+      message: "comment not found"
+    })
   }
-  res.send({comment})
 }
