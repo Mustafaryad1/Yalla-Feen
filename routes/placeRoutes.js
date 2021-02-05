@@ -1,18 +1,19 @@
 const router = require("express").Router();
 const placeControllers = require("../controllers/place_controllers");
-const {requireAuth,grantAccess} =  require('../middleware/authMiddleware');
+const {requireAuth,grantAccess,checkPlaceOwner} =  require('../middleware/authMiddleware');
 const { upload } = require("../middleware/upload");
 const validation_body = require('../middleware/validationBody')
 const place = require('../validation-schema/place')
 
 
 router.get("/", placeControllers.getAllPlaces);
-router.get("/details/:id", placeControllers.getPlaceDetails);
+router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces);
+router.get("/details/:id",requireAuth ,placeControllers.getPlaceDetails);
 router.post("/create", requireAuth,placeControllers.addPlace);
 
-router.put("/update/:id", placeControllers.updatePlace);
+router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace);
 
-router.delete("/delete/:id",placeControllers.deletePlace);
+router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace);
 
 
 // add comment to place/crate-comment/place_id

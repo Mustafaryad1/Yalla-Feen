@@ -7,6 +7,7 @@ const Rating = require("../models/rating_model");
 const upload = require("../middleware/upload").upload;
 const Tags = require("../models/tags_model");
 const { randomBytes } = require("crypto");
+const { find } = require("../models/place_model");
 const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 
 
@@ -100,7 +101,18 @@ const getAllPlaces = async (req, res) => {
   });
 };
 
+const getOwnerPlaces = async(req,res)=>{
+  
+  await Place.find({'owner':req.user._id},(err,places)=>{
+    // console.log(req.user._id);
+    if(err){
+      res.send({success:false,err})
+    }
+    res.send({places})
+  })
 
+  
+}
 
 const getPlaceDetails = async (req, res) => {
   // console.log('im in place details');
@@ -110,15 +122,19 @@ const getPlaceDetails = async (req, res) => {
 
 
 const updatePlace = async (req, res) => {
-  let {
-    ...data
-  } = req.body;
-  const result = await Place.findById({
-    _id: req.params.id
-  }, data, {
-    new: true,
-  });
-  res.send(result);
+  
+  await Place.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {new:true},
+    (err,place)=>{
+      if(err){
+      return res.status(500).send({success:false,message:err});
+      }
+      res.send({success:true,message:place})
+    }
+  )
+  res.send(req.place);
 };
 
 const deletePlace =  (req, res) => {
@@ -271,5 +287,6 @@ module.exports = {
   addCommentToPlace,
   addTagToPlace,
   addRatingToPlace,
-  getPlaceDetails
+  getPlaceDetails,
+  getOwnerPlaces
 };
