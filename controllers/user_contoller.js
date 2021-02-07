@@ -129,7 +129,7 @@ module.exports.forgetPassword = async(req,res) =>{
 module.exports.resetPasswordWithToken = async(req,res) =>{
   const user = await User.findOne({email:req.body.email})
   if(!req.body.email||!req.body.reset_token||!req.body.newPassword){
-    res.status(400).send({success:false,message:"you should enter your mail, token and password"})
+    res.status(400).send({success:false,message:"you should enter your mail, token and newPassword"})
   }
   if(!user){
     res.status(404).send({success:false,message:"User Not Found"})

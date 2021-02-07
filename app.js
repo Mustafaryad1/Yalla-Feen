@@ -5,7 +5,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const parsed = require('dotenv').config().parsed;
 
-// ;
+// swagger config 
+const swaggerUi = require('swagger-ui-express'),
+swaggerDocument = require('./swagger.json');
+
+
+
+
+// routes ;
 const user_routes = require('./routes/user_routes');
 const place_routes = require('./routes/placeRoutes');
 const comment_routes = require('./routes/commentRoutes');
@@ -13,6 +20,8 @@ const category_routes = require('./routes/category_routes');
 const favorite_routes= require('./routes/favorite_routes');
 const tags_routes= require('./routes/tags_routes');
 const rating_routes= require('./routes/rating_routes');
+
+
 
 // config express app
 const app = express();
@@ -49,7 +58,7 @@ app.use('/place',place_routes);
 app.use('/comment',comment_routes);
 app.use('/category',category_routes);
 app.use('/favorite',favorite_routes);
-app.use('/tags',tags_routes);
+app.use('/tag',tags_routes);
 app.use('/rating',rating_routes);
 
 // test joi
@@ -69,6 +78,10 @@ app.post('/test',(req,res) => {
 // //
 
 
-// run express app 
+// run express app  
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(parsed.PORT);
+
+app.listen(parsed.PORT,()=>{
+  console.log(`Server Running on port ${parsed.PORT}`);
+});

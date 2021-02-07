@@ -8,14 +8,13 @@ const upload = require("../middleware/upload").upload;
 const Tags = require("../models/tags_model");
 const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 
-const { find } = require("../models/place_model");
-const { randomBytes } = require("crypto");
+// const { find } = require("../models/place_model");
+// const { randomBytes } = require("crypto");
 
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim()
 
-const default_lat = 30.033333;
-const defualt_lang = 31.233334;
+
 
 const addPlace = (req, res) => {
   upload.array('images',12)(req,res,async function(err){
@@ -272,21 +271,26 @@ const addRatingToPlace = async(req,res)=>{
       res.send({success:false,message: "place not exist"});
     }); // null in if !null==true  place
     const place_user_rate = await Rating.findOne({user:req.user._id,place:req.params.id});
-
+    // console.log(place_user_rate);
     if(!req.body.rate_value){
       res.send({success:false,message: "you should add rating value"});
     }
+
     let rates = 0
     if(!place_user_rate){
+      // console.log("yes it's first time");
       const rating =  new Rating(req.body);
       rating.user = req.user._id;
       rating.place = place._id;
       await rating.save().catch(err=>{res.send({err})})
       place.rating.push(rating._id)
+      // console.log(rating);
       
-    for(rateid of place.rating){
+    console.log("start loop rates");
+      for(rateid of place.rating){
       ratedb= await Rating.findById(rateid);
-      // console.log(ratedb);
+    
+      console.log(ratedb.rate_value);
       rates += ratedb.rate_value;
       // console.log(rates)
     }
@@ -294,28 +298,31 @@ const addRatingToPlace = async(req,res)=>{
       rates = Math.ceil(rates/place.rating.length)
       place.rates = rates
       await place.save()
-      // res.send({place})
-    }
+      return res.send({succes:true,message:"rate has been added ",data:place.rates})
+    }else{
+    // console.log(place_user_rate);
     place_user_rate.rate_value = req.body.rate_value;
-
+    console.log(place_user_rate.rate_value,req.body.rate_value);
     await place_user_rate.save().catch(err=> res.send({err}));
-
     for(rateid of place.rating){
       ratedb= await Rating.findById(rateid);
       // console.log(ratedb);
       rates += ratedb.rate_value;
       // console.log(rates)
+      rates = Math.ceil(rates/place.rating.length);
+      place.rates = rates;
+      await place.save();
+      return res.send({succes:true,message:"rate has been updated",data:place.rates});
     }
-    // console.log(rates,place.rating.length)
-    // console.log(rates/place.rating.length);
-    rates = Math.ceil(rates/place.rating.length);
-    place.rates = rates;
-    await place.save();
-    res.send({message:succes,data:place.rates});
+  
+    }
     
 }
 
 const nearstPlaces = async(req,res)=>{
+  if(!req.body.place){
+    res.send({success:false,message:"enter place"})
+  }
   await geocoder.search( { q: req.body.place} )
       .then((response) => {
         // data =  

@@ -1,0 +1,220 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Yalla Feen Porject",
+    "description": "Yalla Feen Api helps you interact with recommendation trips system ",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+
+  "host": "localhost:3000",
+  "basePath": "/",
+
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Places",
+      "description": "API for Places in the system"
+    },
+    {
+      "name": "Tags",
+      "description": "API for Tags in the system"
+    },
+    {
+      "name": "Categories",
+      "description": "API for Categories in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+
+  "paths": {
+    "/user/list": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Users"
+            }
+          }
+        }
+      }
+    },
+
+    "/category/list": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get all Categories in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Categories"
+            }
+          }
+        }
+      }
+    },
+
+    "/tag/list": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Get all Tags in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Tags"
+            }
+          }
+        }
+      }
+    },
+
+    "/place/list": {
+      "get": {
+        "tags": [
+          "Places"
+        ],
+        "summary": "Get all places in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Places"
+            }
+          }
+        }
+      }
+    }
+    
+  },
+  "definitions": {
+    "User": {
+      "required": [
+        "name",
+        "_id",
+        "companies"
+      ],
+      "properties": {
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "books": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "amount": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "companies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "Place":{
+      "required":[
+          "title",
+          "_id",
+          "type",
+          "description",
+          "category"
+      ],
+      "properties":{
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "title":{
+          "type":"string"
+        }, "description":{
+          "type":"string"
+        }, "category":{
+          "type":"string"
+        }, "type":{
+          "type":"string"
+        }
+      }
+
+    },
+    "Places":{
+      "type":"array",
+      "$ref":"#/definitions/Place"
+    },
+    "Tag":{
+      "required":[
+        "_id",
+        "title"
+      ],
+      "properties":{
+        "title":{
+          "type":"string"
+        }
+      }
+    },
+    "Tags":{
+      "type":"array",
+      "$ref":"#/definitions/Tag"
+    },
+
+    "Category":{
+      "required":[
+        "_id",
+        "title"
+      ],
+      "properties":{
+        "title":{
+          "type":"string"
+        }
+      }
+    },
+    "Categories":{
+      "type":"array",
+      "$ref":"#/definitions/Category"
+    }
+    
+  }
+}

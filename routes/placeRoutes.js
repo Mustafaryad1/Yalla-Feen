@@ -6,7 +6,7 @@ const validation_body = require('../middleware/validationBody')
 const place = require('../validation-schema/place')
 
 
-router.get("/", placeControllers.getAllPlaces);
+router.get("/list", placeControllers.getAllPlaces);
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces);
 router.get("/details/:id",placeControllers.getPlaceDetails);
 router.post("/create", requireAuth,placeControllers.addPlace);
