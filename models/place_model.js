@@ -13,8 +13,11 @@ const PlaceSchema = new Schema(
        required: true 
       },
     location: { 
-      type: String,
-       required: true 
+      type: {
+         type: String,
+         default:"Point" 
+      },
+      coordinates: [],
       },
     type: { 
        type: String,
@@ -66,6 +69,7 @@ const PlaceSchema = new Schema(
       type: String 
     },
     images: [{ type: String}],
+    
     // reviews: [
     //   {
     //     type: Array,
@@ -78,7 +82,12 @@ const PlaceSchema = new Schema(
   },
   { timestamps: true }
 );
+PlaceSchema.index({ location: '2dsphere' });
 
+// PlaceSchema.pre('save',function(next,done){
+//     this.location.collection.push(31.2357).push(31.2357)
+//     done()
+//   })
 const Place = mongoose.model("Place", PlaceSchema, "yalla_feen_places");
 
 module.exports = Place;

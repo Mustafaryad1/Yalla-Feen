@@ -12,6 +12,9 @@ router.post('/upload-profile-pic',requireAuth,authController.uploadAvatar);
 router.get('/list',requireAuth,grantAccess('readAny','users'),authController.get_users);
 router.post('/signup',validation_body(userSchemas.SignUpScehma),authController.signup_post);
 router.post('/login',authController.login_post);
+router.post('/login',authController.login_post);
+router.post('/forget-password',authController.forgetPassword);
+router.post('/reset-password-token',authController.resetPasswordWithToken);
 
 
 router.get('/login',(req,res)=>{

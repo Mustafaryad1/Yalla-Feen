@@ -3,6 +3,7 @@ const uniqueValidator = require('mongoose-unique-validator'); // to add unique p
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/key');
+const { date } = require('joi');
 const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
 const UserSchema = new mongoose.Schema({
   username: {
@@ -61,7 +62,10 @@ const UserSchema = new mongoose.Schema({
   bio: String,
   image: String,
   hash: String,
-  salt: String
+  salt: String,
+  reset_token:String,
+  exp:Date,
+ 
 }, {
   timestamps: true
 });
@@ -99,7 +103,7 @@ UserSchema.methods.toAuthJSON = function () {
     email: this.email,
     token: this.generateJWT(),
     bio: this.bio,
-    image: this.image,
+    image: this.avatar,
     role: this.role
   };
 };

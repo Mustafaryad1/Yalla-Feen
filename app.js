@@ -59,11 +59,13 @@ app.use('/rating',rating_routes);
 //   console.log('/update'); 
 //   res.json(req.body);
 // })
+const lang_lat_search = require('./utils/egypt_city_lang_lat').search
 
-// app.get('/test',(req,res) => {
-//     console.log(req);
-//     res.send({success:true})
-// });
+app.post('/test',(req,res) => {
+    const data =  lang_lat_search(req.body.city)
+    
+    res.send({success:true,data})
+});
 // //
 
 

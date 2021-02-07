@@ -24,6 +24,7 @@ router.post("/add-tag/:id",requireAuth,placeControllers.addTagToPlace);
 
 // add rating place/add-rating/place_id
 router.post("/add-rating/:id",requireAuth,placeControllers.addRatingToPlace);
+router.post("/nearst",placeControllers.nearstPlaces);
 
 // // look at place images
 // router.post('/images',(req,res)=>{

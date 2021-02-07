@@ -11,6 +11,12 @@ const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 const { find } = require("../models/place_model");
 const { randomBytes } = require("crypto");
 
+const Nominatim = require('nominatim-geocoder')
+const geocoder = new Nominatim()
+
+const default_lat = 30.033333;
+const defualt_lang = 31.233334;
+
 const addPlace = (req, res) => {
   upload.array('images',12)(req,res,async function(err){
     if(err){
@@ -33,6 +39,7 @@ const addPlace = (req, res) => {
       res.send({success:false,error:"category not found"})
     }
     body.category = category._id
+
     const place = new Place(body);
     if (!place) {
       return res.status(400).json({
@@ -40,11 +47,27 @@ const addPlace = (req, res) => {
         error: err
       });
     }
+    if(!body.location){
+      await geocoder.search( { q: place.title } )
+      .then((response) => {
+        // data =  
+        console.log(response);
+            place.location.coordinates = [parseFloat(response[0].lon),
+                                          parseFloat(response[0].lat)]
+        })
+        .catch((error) => {
+            err = error;
+        })
+   
+    console.log(place.location.coordinates);
+    }
+
     if(req.files){
     for(item of req.files){
       place.images.push(placeImageUrl+item.filename);
     }}
-   
+    console.log(place);
+
     place.owner = req.user._id;
     place
       .save()
@@ -288,8 +311,27 @@ const addRatingToPlace = async(req,res)=>{
     rates = Math.ceil(rates/place.rating.length);
     place.rates = rates;
     await place.save();
-    res.send({place});
+    res.send({message:succes,data:place.rates});
     
+}
+
+const nearstPlaces = async(req,res)=>{
+  await geocoder.search( { q: req.body.place} )
+      .then((response) => {
+        // data =  
+        console.log(response);
+            coordinates = [parseFloat(response[0].lon),
+                           parseFloat(response[0].lat)]
+        Place.find({ location: { $near: { type: 'Point', coordinates:coordinates}}},
+         function (err, docs) {
+          if (err) return res.send({err});
+          res.send({coordinates,docs});
+          // done();
+        }).exec() 
+      })
+        .catch((error) => {
+            err = error;
+        })
 }
 
 module.exports = {
@@ -301,5 +343,6 @@ module.exports = {
   addTagToPlace,
   addRatingToPlace,
   getPlaceDetails,
-  getOwnerPlaces
+  getOwnerPlaces,
+  nearstPlaces
 };
