@@ -170,7 +170,7 @@ const placeSearch = async (req, res) => {
   if(!result){
     res.status(404).send({success:false,message:"place not found"})
   }
-  res.send({success:true,data:result});
+  res.send({success:true,id:result._id});
 };
 
 
