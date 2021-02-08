@@ -70,7 +70,9 @@ const addPlace = (req, res) => {
     place.owner = req.user._id;
     place
       .save()
-      .then(() => {
+      .then(async (data) => {
+        category.places.push(data._id);
+        await category.save()
         return res.status(200).json({
           success: true,
           id: place._id,

@@ -14,7 +14,11 @@ const CategorySchema = new Schema(
       },
     categoryImage: {
         type: String 
-    }
+    },
+    places:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Place"
+    }]
   },
   { timestamps: true }
 );

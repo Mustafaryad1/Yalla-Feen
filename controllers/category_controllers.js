@@ -44,6 +44,7 @@ getAllCategoryes = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+
 deleteCategory = async (req, res) => {
     Category.findByIdAndDelete({ _id: req.params.id })
     .then((data) => res.json(data))
