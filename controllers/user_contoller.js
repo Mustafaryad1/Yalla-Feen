@@ -139,6 +139,7 @@ module.exports.checkToken = async(req,res)=>{
   }
   res.status(400).send({success:false,message:"ask for your valid token"})
 }
+
 module.exports.resetPasswordWithToken = async(req,res) =>{
   const user = await User.findOne({email:req.body.email})
   if(!req.body.email||!req.body.reset_token||!req.body.newPassword){
