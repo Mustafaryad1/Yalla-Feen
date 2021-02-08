@@ -17,7 +17,7 @@ router.post('/forget-password',authController.forgetPassword);
 router.post('/reset-password-token',authController.resetPasswordWithToken);
 router.post('/check-token',authController.checkToken);
 router.put('/edit-profile',requireAuth,authController.editProfile);
-
+router.put('/give-permission',requireAuth,authController.givePermission)
 
 router.get('/login',(req,res)=>{
   res.send({'login':'this is login get page'})

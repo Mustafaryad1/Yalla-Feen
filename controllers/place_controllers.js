@@ -173,7 +173,23 @@ const placeSearch = async (req, res) => {
   res.send({success:true,id:result._id});
 };
 
+// //stash
+// const searchByRating = async (req, res) => {
+//   // console.log('im in place details');
 
+//   const result = await Place.findOne({:req.params.rating}).populate({
+//     path:'comments',
+//     select:['text','createdAt'],
+//     populate:{
+//         path:"user",
+//         select:["username","avatar"]}
+//       }).populate().exec();
+//   if(!result){
+//     res.status(404).send({success:false,message:"place not found"})
+//   }
+//   res.send({success:true,id:result._id});
+// };
+// //
 const updatePlace = async (req, res) => {
   
   await Place.findByIdAndUpdate(
@@ -359,7 +375,7 @@ const nearstPlaces = async(req,res)=>{
         })
 }
 
-
+//admin controllers
 
 module.exports = {
   addPlace,

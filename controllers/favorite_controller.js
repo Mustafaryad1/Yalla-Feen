@@ -59,5 +59,6 @@ const removeFavorite = async(req,res)=>{
     }
 };
 
+//admin controllers
 
 module.exports = {addFavorite,getUserFavorites,removeFavorite}

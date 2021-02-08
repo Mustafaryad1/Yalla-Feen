@@ -62,4 +62,6 @@ deleteCategory = async (req, res) => {
     res.send("Delete " + result);
   }
 
+  //admin controllers
+  
 module.exports = { addCategory, getAllCategoryes, deleteCategory,getAllPlaces };

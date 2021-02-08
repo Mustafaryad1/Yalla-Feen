@@ -62,6 +62,9 @@ deleteRating = async (req, res) => {
     res.send("Delete " + result);
   }
 
+  //admin controllers
+
+  
 module.exports = { 
     addRating,
     getRating,

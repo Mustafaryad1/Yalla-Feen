@@ -173,3 +173,18 @@ module.exports.resetPasswordWithToken = async(req,res) =>{
   res.send({success:true,message:"Password has been updated"})
 
 }
+
+//admin controllers
+
+// give permission 
+module.exports.givePermission  = async(req,res) =>{
+  req.user.role = (req.body.role)?req.body.role:req.user.role
+  console.log(req.user.role)
+  try{
+  await req.user.save();
+  }catch(err){
+    res.send({message:false,success:"can't update"})
+  }
+  // console.log(req.user);
+  res.send({message:"i am here any time you want me"})
+}
