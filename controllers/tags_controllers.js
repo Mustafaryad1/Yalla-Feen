@@ -53,4 +53,14 @@ deleteTags = async (req, res) => {
     res.send("Delete " + result);
   }
 
-module.exports = { addTags, getAllTags, deleteTags };
+  getAllPlaces = async(req,res)=>{
+    const category = await Category
+                          .findById(req.params.id)
+                          .populate({path:"places",select:["title","location"]})
+                          .exec()
+                          .catch(err => res.status(404)
+                          .send({succes:false,message:"Tag Not found"}));
+                                   
+    res.send({success:true,places:category.places})  
+  }
+module.exports = { addTags, getAllTags, deleteTags, getAllPlaces };

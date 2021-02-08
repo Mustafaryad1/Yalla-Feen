@@ -47,8 +47,10 @@ module.exports.profile = (req, res) => {
 // edit profile
 module.exports.editProfile = async(req,res) =>{
   console.log(req.body);
+  req.user.city = (req.body.city)?req.body.city:req.user.city
   req.user.firstname = (req.body.firstname)?req.body.firstname:req.user.firstname
-  // req.user.lastname = (req.body.lastanme)?req.body.lastanme:req.user.lastanme
+  req.user.lastname = (req.body.lastname)?req.body.lastname:req.user.lastname
+  req.user.email = (req.body.email)?req.body.email:req.user.email
   try{
   await req.user.save();
   }catch(err){
