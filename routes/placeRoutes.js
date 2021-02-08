@@ -9,6 +9,7 @@ const place = require('../validation-schema/place')
 router.get("/list", placeControllers.getAllPlaces);
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces);
 router.get("/details/:id",placeControllers.getPlaceDetails);
+router.get("/place-title/:title",placeControllers.placeSearch);
 router.post("/create", requireAuth,placeControllers.addPlace);
 
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace);

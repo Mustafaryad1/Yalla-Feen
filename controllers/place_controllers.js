@@ -146,6 +146,7 @@ const getOwnerPlaces = async(req,res)=>{
 
 const getPlaceDetails = async (req, res) => {
   // console.log('im in place details');
+  
   const result = await Place.findById(req.params.id).populate({
     path:'comments',
     select:['text','createdAt'],
@@ -155,6 +156,21 @@ const getPlaceDetails = async (req, res) => {
       }).populate().exec()
 ;
   res.send(result);
+};
+const placeSearch = async (req, res) => {
+  // console.log('im in place details');
+
+  const result = await Place.findOne({'title':req.params.title}).populate({
+    path:'comments',
+    select:['text','createdAt'],
+    populate:{
+        path:"user",
+        select:["username","avatar"]}
+      }).populate().exec();
+  if(!result){
+    res.status(404).send({success:false,message:"place not found"})
+  }
+  res.send({success:true,data:result});
 };
 
 
@@ -353,5 +369,6 @@ module.exports = {
   addRatingToPlace,
   getPlaceDetails,
   getOwnerPlaces,
-  nearstPlaces
+  nearstPlaces,
+  placeSearch
 };
