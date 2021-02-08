@@ -126,6 +126,19 @@ module.exports.forgetPassword = async(req,res) =>{
   res.send({success:true,message:"the mail has benn sent with Token"})
 }
 
+module.exports.checkToken = async(req,res)=>{
+  const user = await User.findOne({email:req.body.email})
+  if(!req.body.email||!req.body.reset_token){
+    res.status(400).send({success:false,message:"you should enter your mail, token"})
+  }
+  if(!user){
+    res.status(404).send({success:false,message:"User Not Found"})
+  }
+  if(req.body.reset_token== user.reset_token){
+      res.send({success:true,message:"Token are valid"})
+  }
+  res.status(400).send({success:false,message:"ask for your valid token"})
+}
 module.exports.resetPasswordWithToken = async(req,res) =>{
   const user = await User.findOne({email:req.body.email})
   if(!req.body.email||!req.body.reset_token||!req.body.newPassword){

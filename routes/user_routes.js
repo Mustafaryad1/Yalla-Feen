@@ -15,6 +15,7 @@ router.post('/login',authController.login_post);
 router.post('/login',authController.login_post);
 router.post('/forget-password',authController.forgetPassword);
 router.post('/reset-password-token',authController.resetPasswordWithToken);
+router.post('/check-token',authController.checkToken);
 
 
 router.get('/login',(req,res)=>{
