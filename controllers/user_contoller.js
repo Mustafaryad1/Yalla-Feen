@@ -44,6 +44,19 @@ module.exports.profile = (req, res) => {
 
   res.send({profile:req.user});
 }
+// edit profile
+module.exports.editProfile = async(req,res) =>{
+  console.log(req.body);
+  req.user.firstname = (req.body.firstname)?req.body.firstname:req.user.firstname
+  // req.user.lastname = (req.body.lastanme)?req.body.lastanme:req.user.lastanme
+  try{
+  await req.user.save();
+  }catch(err){
+    res.send({message:false,success:"can't update"})
+  }
+  // console.log(req.user);
+  res.send({message:"i am here any time you want me"})
+}
 // get users
 module.exports.get_users = async(req,res)=>{
   const users = await User.find({});

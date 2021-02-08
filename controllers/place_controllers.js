@@ -359,6 +359,8 @@ const nearstPlaces = async(req,res)=>{
         })
 }
 
+
+
 module.exports = {
   addPlace,
   getAllPlaces,
