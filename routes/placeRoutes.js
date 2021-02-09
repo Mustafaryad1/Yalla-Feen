@@ -10,7 +10,8 @@ router.get("/list", placeControllers.getAllPlaces);
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces);
 router.get("/details/:id",placeControllers.getPlaceDetails);
 router.get("/place-title/:title",placeControllers.placeSearch);
-router.get("/search/:category/:tagTitle",placeControllers.customFilter);
+router.get("/find/:category/:tagTitle",placeControllers.customFilter);
+router.get("/search",placeControllers.customSearch);
 router.post("/create", requireAuth,placeControllers.addPlace);
 
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace);

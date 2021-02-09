@@ -11,7 +11,8 @@ const placeImageUrl = require('dotenv').config().parsed.PLACEIMAGESURL;
 // const { find } = require("../models/place_model");
 // const { randomBytes } = require("crypto");
 
-const Nominatim = require('nominatim-geocoder')
+const Nominatim = require('nominatim-geocoder');
+const { Mongoose } = require("mongoose");
 const geocoder = new Nominatim()
 
 
@@ -204,38 +205,97 @@ const placeSearch = async (req, res) => {
 };
 
 const customFilter = async (req, res) => {
-  const {category,tagTitle} = req.params;
-  const tag = await Tags.findOne({'title':tagTitle})
-                        .catch()
+  const {
+    category,
+    tagTitle
+  } = req.params;
+  const tag = await Tags.findOne({
+      'title': tagTitle
+    })
+    .catch()
   const result = await Category
     .find({
       'title': category
     })
     .populate({
-              path: 'places',
-              select: ['title', 'description'],
-              match:{'tags':{"$in":[tag._id,]}},
-              populate:{path:'tags',select:"title"}})
+      path: 'places',
+      select: ['title', 'description'],
+      match: {
+        'tags': {
+          "$in": [tag._id, ]
+        }
+      },
+      populate: {
+        path: 'tags',
+        select: "title"
+      }
+    })
     .exec()
-     
+
 
 
   if (result.length == 0) {
     res.send({
       success: false,
       message: "Sorry not found yet"
-    })}
+    })
+  }
 
   res.send({
     success: true,
     message: "founded",
     data: result,
-    tag:tag
+    tag: tag
   })
 
 
 }
 
+const customSearch = async (req, res) => {
+  let {category,tag,city = '',budget = 100,
+       type=['solo','family','couples','friends']} = req.query
+  let _tag = await Tags.findOne({'title': {'$regex':tag}})
+  if(!_tag){
+    _tag = {_id:"601c0abfe834ce2f70c29450"}
+  }
+  budget = parseInt(budget)
+  budget =(budget > 0 )?parseInt(budget):100;
+  // console.log(budget);
+  const result = await Category
+    .find({
+      'title': category
+    })
+    .populate({
+      path: 'places',
+      select: ['title', 'city','minBudget','type'],
+      match: {
+        'tags': {
+          "$in": [_tag._id, ]
+        },
+        'city':{'$regex':city},
+        'minBudget':{'$lt':budget},
+        'type':{"$in":type}
+      },
+      populate: {
+        path: 'tags',
+        select: "title"
+      }
+    })
+    .exec()
+
+
+
+  if (result.length == 0) {
+    res.send({
+      success: false,
+      message: "Sorry not found yet"
+    })
+  }
+
+  res.send({success: true,message: "founded", data: result,tag: tag})
+
+
+}
 // //stash
 // const searchByRating = async (req, res) => {
 //   // console.log('im in place details');
@@ -358,41 +418,47 @@ const addTagToPlace = async (req, res) => {
       }
 
     ));
-  const body = req.body
-  if (!body.title) {
-    return res.status(400).json({
-      success: false,
-      error: "You must add Tag Name",
-    });
-  }
-  let tag = await Tags.findOne({
-    'title': body.title
-  }) // null or tag
-  // console.log(tag);
-  if (!tag) {
+    const body = req.body
+    if (!body.title) {
+      return res.status(400).json({
+        success: false,
+        error: "You must add Tag Name",
+      });
+    }
+    let tag = await Tags.findOne({
+      'title': body.title
+    }) // null or tag
     // console.log(tag);
-    //  return res.send({success:false,message: "Tag not exist in tags "})
-    tag = new Tags(body);
-    // console.log(tag)
-    await tag.save()
-  }
-
-  const exist = await place.tags.filter(
-    place_tag_id => place_tag_id.toString() === tag._id.toString())
-  if (exist.length != 0) {
-    return res.send({
-      success: false,
-      message: "Tag  exist in place tags "
-    })
-  }
-  place.tags.push(tag._id)
-  tag.places.push(place._id)
-  await place.save()
-  await tag.save()
+    if (!tag) {
+      // console.log(tag);
+      //  return res.send({success:false,message: "Tag not exist in tags "})
+      tag = new Tags(body);
+      // console.log(tag)
+      await tag.save()
+    }
+    
+  // const category = await Category.findById(place.category)
+  await Place.updateOne({'_id':place._id},{"$addToSet":{'tags':tag._id}})
+  await Category.updateOne({'_id':place.category},{"$addToSet":{'tags':tag._id}})
+  await Tags.updateOne({'_id':tag._id},{"$addToSet":{'places':place._id}})
+  // const exist = await place.tags.filter(
+  //   place_tag_id => place_tag_id.toString() === tag._id.toString())
+  // if (exist.length != 0) {
+  //   return res.send({
+  //     success: false,
+  //     message: "Tag  exist in place tags "
+  //   })
+  // }
+  // place.tags.push(tag._id)
+  // await place.save()
+  // await tag.save()
 
   res.send({
     success: true,
-    message: "Tag has been added"
+    message: "Tag has been added",
+    tagid:tag._id,
+    placeid:place._id,
+    category:place.category
   })
 }
 
@@ -526,5 +592,6 @@ module.exports = {
   getOwnerPlaces,
   nearstPlaces,
   placeSearch,
-  customFilter
+  customFilter,
+  customSearch
 };

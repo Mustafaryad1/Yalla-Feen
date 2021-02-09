@@ -22,8 +22,10 @@ const PlaceSchema = new Schema(
       coordinates: [],
       },
     type: { 
-       type: String,
-       required: true 
+       type: [{
+         type:String
+        ,enum:['solo','friends','family','couples']}],
+        default:['solo','friends','family','couples']
       },
     comments:[{
         type:mongoose.Schema.Types.ObjectId,
@@ -61,12 +63,14 @@ const PlaceSchema = new Schema(
     workEnd: { 
       type: Date 
     },
-    vistorType: [{
-      type:String
-    }],
-    budgetType: [{
-      type:String
-    }],
+    city: {
+      type:String,
+      default:"cairo"
+    },
+    minBudget: {
+      type:Number,
+      default:100
+    },
     phone: { 
       type: String 
     },

@@ -18,7 +18,13 @@ const CategorySchema = new Schema(
     places:[{
       type:mongoose.Schema.Types.ObjectId,
       ref:"Place"
-    }]
+    }],
+    tags:[
+      {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Tags"
+      }
+    ]
   },
   { timestamps: true }
 );
