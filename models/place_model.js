@@ -6,7 +6,9 @@ const PlaceSchema = new Schema(
 
     title: {
       type: String,
-      required: true 
+      required: true,
+      unique:true,
+      lowercase:true 
       },
     description: { 
       type: String,
