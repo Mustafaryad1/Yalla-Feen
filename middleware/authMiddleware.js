@@ -34,9 +34,9 @@ const requireAuth =  (req, res, next) => {
 const grantAccess = (action,resource)=>{
   return (req,res,next)=>{
    try{
-      console.log('-------------------user-------------')
+      // console.log('-------------------user-------------')
       // console.log(req.user);
-      console.log(req.user.role);
+      console.log(req.user.email);
       const permission = roles.can(req.user.role)[action](resource);
       if (!permission.granted) {
        return res.status(401).json({

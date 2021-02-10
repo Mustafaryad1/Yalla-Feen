@@ -39,12 +39,43 @@ const handleErrors = (err) => {
 }
 
 
-// user profile
-module.exports.profile = (req, res) => {
 
-  res.send({profile:req.user});
+// get users
+module.exports.get_users = async(req,res)=>{
+  const users = await User.find({});
+  res.send({usersData:users})
 }
+// -----------------------admin routes -----------------------
+// give permission 
+module.exports.givePermission  = async(req,res) =>{
+  let user = await User.findOneAndUpdate({'_id':req.params.user_id}, {'role':'admin'}, {
+    returnOriginal: false
+  }).catch(err => {res.status(404).send({sucess:false,message:"User not found"})});
+  
+  res.status(204).send({success:true,message:`${user.username} has became an Admin now`})
+}
+
+// delete user by id
+module.exports.deleteUser = async(req,res)=>{
+  var id = req.params.user_id; //here you pass the id
+    User
+   .findByIdAndRemove(id)
+   .exec()
+   .then(function(user) {
+       return user
+    }).catch(function(error) {
+      res.status(404).send({success:false, message: "User not found"})
+    });
+    res.send({success:true,message:"User has been deleted"})
+  
+}
+
+
+
+// user
+
 // edit profile
+
 module.exports.editProfile = async(req,res) =>{
   console.log(req.body);
   req.user.city = (req.body.city)?req.body.city:req.user.city
@@ -58,11 +89,6 @@ module.exports.editProfile = async(req,res) =>{
   }
   // console.log(req.user);
   res.send({message:"i am here any time you want me"})
-}
-// get users
-module.exports.get_users = async(req,res)=>{
-  const users = await User.find({});
-  res.send({usersData:users})
 }
 // signup api method
 module.exports.signup_post = async(req, res) => {
@@ -78,6 +104,12 @@ module.exports.signup_post = async(req, res) => {
   //  console.log(err);
    res.send({success:false,message:"faild to create user",error:err.message})
  }
+}
+
+// user profile
+module.exports.profile = (req, res) => {
+
+  res.send({profile:req.user});
 }
 
 // login method[POST]  user/login
@@ -175,16 +207,3 @@ module.exports.resetPasswordWithToken = async(req,res) =>{
 }
 
 //admin controllers
-
-// give permission 
-module.exports.givePermission  = async(req,res) =>{
-  req.user.role = (req.body.role)?req.body.role:req.user.role
-  console.log(req.user.role)
-  try{
-  await req.user.save();
-  }catch(err){
-    res.send({message:false,success:"can't update"})
-  }
-  // console.log(req.user);
-  res.send({message:"i am here any time you want me"})
-}

@@ -18,6 +18,8 @@ ac.grant("admin")
  .deleteAny("profile")
  .readAny("users")
  .readAny('comments')
+ .updateAny("admin")
+ 
 
 return ac;
 })();
