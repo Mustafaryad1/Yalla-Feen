@@ -273,7 +273,6 @@ const customSearch = async (req, res) => {
     })
     .populate({
       path: 'places',
-      select: ['title', 'city','minBudget','type'],
       match: {
 
         'city':{'$regex':city},
