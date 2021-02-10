@@ -8,6 +8,6 @@ router.delete("/tags/:id", (req, res, next) => {
   Place.findOneAndDelete({ _id: req.params.id })
     .then((data) => res.json(data))
     .catch(next);
-});
+});  // need modified just admin 
 
 module.exports = router;

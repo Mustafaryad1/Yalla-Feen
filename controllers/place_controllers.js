@@ -252,12 +252,18 @@ const customFilter = async (req, res) => {
 }
 
 const customSearch = async (req, res) => {
-  let {category,tag,city = '',budget = 100,
+  // console.log(req.query);
+  let {category,tag='',city = '',budget = 100,
        type=['solo','family','couples','friends']} = req.query
-  let _tag = await Tags.findOne({'title': {'$regex':tag}})
+  let _tag = await Tags.find({'title': {'$regex':(tag=='x')?tag:''}})
+  city = (city==='x')?'':city;
+  budget = (budget==='x')?100:budget;
+  type = (type==='x')?['solo','family','couples','friends']:[type];
+  console.log(budget);
   if(!_tag){
     _tag = {_id:"601c0abfe834ce2f70c29450"}
   }
+  console.log(type);
   budget = parseInt(budget)
   budget =(budget > 0 )?parseInt(budget):100;
   // console.log(budget);
@@ -269,12 +275,10 @@ const customSearch = async (req, res) => {
       path: 'places',
       select: ['title', 'city','minBudget','type'],
       match: {
-        'tags': {
-          "$in": [_tag._id, ]
-        },
+
         'city':{'$regex':city},
         'minBudget':{'$lt':budget},
-        'type':{"$in":type}
+        // 'type':{"$in":type}
       },
       populate: {
         path: 'tags',
@@ -292,7 +296,7 @@ const customSearch = async (req, res) => {
     })
   }
 
-  res.send({success: true,message: "founded", data: result,tag: tag})
+  res.send({success: true,message: "founded", data: result})
 
 
 }
@@ -464,12 +468,14 @@ const addTagToPlace = async (req, res) => {
 
 const addRatingToPlace = async (req, res) => {
   // console.log(req.user,req.params.id);
+  // console.log('start');
   let place = await Place.findById(req.params.id).catch(err => {
     res.send({
       success: false,
       message: "place not exist"
     });
   }); // null in if !null==true  place
+  // console.log(place);
   const place_user_rate = await Rating.findOne({
     user: req.user._id,
     place: req.params.id
@@ -481,11 +487,12 @@ const addRatingToPlace = async (req, res) => {
       message: "you should add rating value"
     });
   }
-
+  // console.log(req.body);
   let rates = 0
   if (!place_user_rate) {
     // console.log("yes it's first time");
     const rating = new Rating(req.body);
+    // console.log(rating);
     rating.user = req.user._id;
     rating.place = place._id;
     await rating.save().catch(err => {
@@ -496,38 +503,42 @@ const addRatingToPlace = async (req, res) => {
     place.rating.push(rating._id)
     // console.log(rating);
 
-    console.log("start loop rates");
+    // console.log("start loop rates");
     for (rateid of place.rating) {
       ratedb = await Rating.findById(rateid);
 
-      console.log(ratedb.rate_value);
+      // console.log(ratedb.rate_value);
       rates += ratedb.rate_value;
       // console.log(rates)
     }
 
     rates = Math.ceil(rates / place.rating.length)
     place.rates = rates
-    await place.save()
+    await place.save().catch(err => res.send({err}))
     return res.send({
       succes: true,
       message: "rate has been added ",
       data: place.rates
     })
   } else {
-    // console.log(place_user_rate);
+    // console.log("in else");
     place_user_rate.rate_value = req.body.rate_value;
-    console.log(place_user_rate.rate_value, req.body.rate_value);
+    // console.log(place_user_rate.rate_value, req.body.rate_value);
+    // console.log('before catch');
     await place_user_rate.save().catch(err => res.send({
       err
     }));
+    // console.log('after catch');
     for (rateid of place.rating) {
-      ratedb = await Rating.findById(rateid);
+      ratedb = await Rating.findById(rateid).catch(err => console.log(err));
+      // console.log(ratedb);
       // console.log(ratedb);
       rates += ratedb.rate_value;
       // console.log(rates)
       rates = Math.ceil(rates / place.rating.length);
       place.rates = rates;
-      await place.save();
+      await place.save().catch(err=> res.send({err}));
+      // console.log(place);
       return res.send({
         succes: true,
         message: "rate has been updated",

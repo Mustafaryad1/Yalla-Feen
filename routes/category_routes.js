@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const categoryControllers = require("../controllers/category_controllers");
 
+// just admin 
+
 router.get("/list", categoryControllers.getAllCategoryes);
 router.post("/create", categoryControllers.addCategory);
 router.get("/places/:id", categoryControllers.getAllPlaces);

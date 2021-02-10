@@ -7,20 +7,20 @@ const place = require('../validation-schema/place')
 
 
 router.get("/list", placeControllers.getAllPlaces);
-router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces);
+router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces); 
 router.get("/details/:id",placeControllers.getPlaceDetails);
 router.get("/place-title/:title",placeControllers.placeSearch);
 router.get("/find/:category/:tagTitle",placeControllers.customFilter);
 router.get("/search",placeControllers.customSearch);
 router.post("/create", requireAuth,placeControllers.addPlace);
 
-router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace);
+router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace); //need admin 
 
-router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace);
+router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace); // need admin
 
 
 // add comment to place/crate-comment/place_id
-router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace);
+router.post("/create-comment/:id",requireAuth,placeControllers.addCommentToPlace); 
 
 // add tag to place
 router.post("/add-tag/:id",requireAuth,placeControllers.addTagToPlace);
@@ -28,6 +28,9 @@ router.post("/add-tag/:id",requireAuth,placeControllers.addTagToPlace);
 // add rating place/add-rating/place_id
 router.post("/add-rating/:id",requireAuth,placeControllers.addRatingToPlace);
 router.post("/nearst",placeControllers.nearstPlaces);
+
+
+module.exports = router;
 
 // // look at place images
 // router.post('/images',(req,res)=>{
@@ -46,4 +49,3 @@ router.post("/nearst",placeControllers.nearstPlaces);
  
 // })
  
-module.exports = router;

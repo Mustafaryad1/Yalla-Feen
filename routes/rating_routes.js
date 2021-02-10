@@ -1,6 +1,9 @@
 const router = require("express").Router();
 const ratingControllers = require("../controllers/rating_controllers");
 const {requireAuth} = require('../middleware/authMiddleware')
+
+// admin 
+
 router.get("/", ratingControllers.getRating);
 router.post("/create",requireAuth ,ratingControllers.addRating);
 router.post("/update", ratingControllers.updateRating);

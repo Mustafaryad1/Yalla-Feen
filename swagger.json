@@ -29,7 +29,13 @@
     {
       "name": "Categories",
       "description": "API for Categories in the system"
+    },
+    {
+      "name": "Comments",
+      "description": "API for Comment in the system"
     }
+    
+
   ],
   "schemes": [
     "http"
@@ -63,6 +69,7 @@
       "get": {
         "tags": [
           "Categories"
+         
         ],
         "summary": "Get all Categories in system",
         "responses": {
@@ -75,6 +82,24 @@
         }
       }
     },
+    "category/create":{
+        "post":{
+          "tags":[
+            "Categories"
+          ]
+        }
+    },  
+    "category/delete/:id":{
+      "delete":{
+        "tags":[
+          "Categories"
+        ]
+      }},"category/update/:id":{
+        "put":{
+          "tags":[
+            "Categories"
+          ]
+        } },
 
     "/tag/list": {
       "get": {
@@ -116,7 +141,7 @@
       "required": [
         "name",
         "_id",
-        "companies"
+        "places"
       ],
       "properties": {
         "_id": {

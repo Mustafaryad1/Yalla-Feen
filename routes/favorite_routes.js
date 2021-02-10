@@ -15,7 +15,7 @@ router.get('/isfavorite/:place_id',requireAuth,(req,res)=>{
     res.status(404).send({success:false,message:"place does not exist in favorites"})
 });
 router.get('/list',requireAuth,favoriteControllers.getUserFavorites);
-router.delete('/remove/:place_id',requireAuth,favoriteControllers.removeFavorite);
+router.delete('/remove/:place_id',requireAuth,favoriteControllers.removeFavorite); 
 
 
 
