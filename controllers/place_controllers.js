@@ -351,8 +351,7 @@ const deletePlace = (req, res) => {
       }
       res.send({
         succes: true,
-        message: "place deleted",
-        data: data
+        message: `${data.title} place deleted`,
       })
     })
     .catch(err => {
@@ -549,7 +548,7 @@ const addRatingToPlace = async (req, res) => {
 
 }
 
-const nearstPlaces = async (req, res) => {
+const nearestPlaces = async (req, res) => {
   if (!req.body.place) {
     res.send({
       success: false,
@@ -600,7 +599,7 @@ module.exports = {
   addRatingToPlace,
   getPlaceDetails,
   getOwnerPlaces,
-  nearstPlaces,
+  nearestPlaces,
   placeSearch,
   customFilter,
   customSearch

@@ -46,9 +46,10 @@ getAllTags = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
-deleteTags = async (req, res) => {
+deleteTag = async (req, res) => {
     Tags.findByIdAndDelete({ _id: req.params.id })
-    .then((data) => res.json(data))
+    .then((data) => {
+      res.json(data)})
     .catch(next);
     res.send("Delete " + result);
   }
@@ -64,5 +65,6 @@ deleteTags = async (req, res) => {
     res.send({success:true,places:tag.places})  
   }
 
+  
   //admin controllers
-module.exports = { addTags, getAllTags, deleteTags, getAllPlaces };
+module.exports = { addTags, getAllTags, deleteTag, getAllPlaces };

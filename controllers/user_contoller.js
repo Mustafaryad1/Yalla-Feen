@@ -67,15 +67,13 @@ module.exports.deleteUser = async(req,res)=>{
       res.status(404).send({success:false, message: "User not found"})
     });
     res.send({success:true,message:"User has been deleted"})
-  
 }
 
 
 
+
 // user
-
 // edit profile
-
 module.exports.editProfile = async(req,res) =>{
   console.log(req.body);
   req.user.city = (req.body.city)?req.body.city:req.user.city
@@ -88,8 +86,9 @@ module.exports.editProfile = async(req,res) =>{
     res.send({message:false,success:"can't update"})
   }
   // console.log(req.user);
-  res.send({message:"i am here any time you want me"})
+  res.send({success:true,message:"User Updated"})
 }
+
 // signup api method
 module.exports.signup_post = async(req, res) => {
  try{

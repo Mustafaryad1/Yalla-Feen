@@ -58,7 +58,7 @@ const checkPlaceOwner = async(req,res,next)=>{
     if(!place){
       res.status(404).send({success:false,message:"place Not Found"})
     }
-    if(req.user._id.toString()==place.owner._id.toString()){
+    if(req.user._id.toString()==place.owner._id.toString()||req.user.role=='admin'){
       // console.log("yes you are owner");
       // req.place = place
       next();

@@ -16,8 +16,12 @@ ac.grant("admin")
  .extend("agancy")
  .updateAny("profile")
  .deleteAny("profile")
+ .deleteAny("category")
+ .createAny('category')
+ .deleteAny("tag")
  .readAny("users")
  .readAny('comments')
+ .readAny('rating')
  .updateAny("admin")
  
 
