@@ -5,13 +5,14 @@ const {requireAuth,checkPlaceOwner} =  require('../middleware/authMiddleware');
 
 // puplic user
 router.get("/list", placeControllers.getAllPlaces);
+router.get("/top", placeControllers.getTopRatedPlaces);
 router.get("/details/:id",placeControllers.getPlaceDetails);
 router.get("/place-title/:title",placeControllers.placeSearch);
 router.get("/find/:category/:tagTitle",placeControllers.customFilter);
 router.get("/search",placeControllers.customSearch);
 router.post("/nearest",placeControllers.nearestPlaces);
 
-// only host adnd admin
+// only host and admin
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces); 
 router.post("/create", requireAuth,placeControllers.addPlace);
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace); //need admin[done] 
