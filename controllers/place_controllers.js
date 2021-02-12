@@ -467,17 +467,16 @@ const addTagToPlace = async (req, res) => {
 const addRatingToPlace = async (req, res) => {
   // console.log(req.user,req.params.id);
   // console.log('start');
-  let place = await Place.findById(req.params.id).catch(err => {
-    res.send({
-      success: false,
-      message: "place not exist"
-    });
-  }); // null in if !null==true  place
+  let place = await Place.findOne({'_id':req.params.id})
+                         .catch(err => res.status(404).send({success:false,message:"Place not Found"})) // return null or return object 
+  if(!place){
+    res.status(404).send({success:false,message:"Place not Found"})
+  }  
   // console.log(place);
   const place_user_rate = await Rating.findOne({
     user: req.user._id,
     place: req.params.id
-  });
+  })
   // console.log(place_user_rate);
   if (!req.body.rate_value) {
     res.send({
@@ -485,66 +484,56 @@ const addRatingToPlace = async (req, res) => {
       message: "you should add rating value"
     });
   }
-  // console.log(req.body);
-  let rates = 0
+  // // console.log(req.body);
+  // let rates = 0
+  let rating;
   if (!place_user_rate) {
-    // console.log("yes it's first time");
-    const rating = new Rating(req.body);
-    // console.log(rating);
+  //   // console.log("yes it's first time");
+  rating = new Rating(req.body);
+  //   // console.log(rating);
     rating.user = req.user._id;
     rating.place = place._id;
     await rating.save().catch(err => {
-      res.send({
-        err
-      })
-    })
-    place.rating.push(rating._id)
-    // console.log(rating);
-
-    // console.log("start loop rates");
-    for (rateid of place.rating) {
-      ratedb = await Rating.findById(rateid);
-
-      // console.log(ratedb.rate_value);
-      rates += ratedb.rate_value;
-      // console.log(rates)
+      res.status(400).send({
+            success:false,message:"value not valid you should enter one value from [0,1,2,3,4,5]"
+      })})
+    await Place.updateOne({'_id':place._id},{"$addToSet":{'rating':rating._id}})
+    
     }
-
-    rates = Math.ceil(rates / place.rating.length)
-    place.rates = rates
-    await place.save().catch(err => res.send({err}))
-    return res.send({
-      succes: true,
-      message: "rate has been added ",
-      data: place.rates
-    })
-  } else {
-    // console.log("in else");
-    place_user_rate.rate_value = req.body.rate_value;
-    // console.log(place_user_rate.rate_value, req.body.rate_value);
-    // console.log('before catch');
-    await place_user_rate.save().catch(err => res.send({
-      err
-    }));
-    // console.log('after catch');
-    for (rateid of place.rating) {
-      ratedb = await Rating.findById(rateid).catch(err => console.log(err));
-      // console.log(ratedb);
-      // console.log(ratedb);
-      rates += ratedb.rate_value;
-      // console.log(rates)
-      rates = Math.ceil(rates / place.rating.length);
-      place.rates = rates;
-      await place.save().catch(err=> res.send({err}));
-      // console.log(place);
-      return res.send({
-        succes: true,
-        message: "rate has been updated",
-        data: place.rates
-      });
+    else{
+    //  rating =  await Rating.updateOne({'user':req.user._id,'place':place._id},{'rate_value':req.body.rate_value});
+      place_user_rate.rate_value = req.body.rate_value;
+      await place_user_rate.save().catch(err =>
+        res.send({
+          success:false,message:"value not valid you should enter one value from [0,1,2,3,4,5]"})
+        )
     }
-
-  }
+     let [{rates}]= await Rating.aggregate(
+      [{
+        $match:{
+            place:place._id
+      }},
+        {
+          $group: {
+            _id: "$place",
+            rates: {
+              $sum: "$rate_value"
+            }
+          }
+        }
+      ],
+      function(err, result) {
+        if (err) {
+          res.send(err);
+        } else {
+          return result
+        }
+      }
+    );
+  let place_rates = Math.ceil(rates/place.rating.length)
+  // res.send({place_rates})
+  await Place.updateOne({'_id':place._id},{'rates':place_rates})
+  res.send({succes:true,place_rates})
 
 }
 
