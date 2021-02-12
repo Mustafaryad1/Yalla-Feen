@@ -2,6 +2,7 @@ const router = require("express").Router();
 const categoryControllers = require("../controllers/category_controllers");
 const { requireAuth, grantAccess } = require('../middleware/authMiddleware')
 router.get("/places/:id", categoryControllers.getAllPlaces);
+router.get("/tags/:id", categoryControllers.getAllTags);
 router.get("/list", categoryControllers.getAllCategoryes);
 
 // just admin 

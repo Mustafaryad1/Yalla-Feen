@@ -65,7 +65,6 @@ const PlaceSchema = new Schema(
     },
     city: {
       type:String,
-      default:"cairo"
     },
     minBudget: {
       type:Number,

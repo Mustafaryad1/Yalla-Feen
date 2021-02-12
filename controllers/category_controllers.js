@@ -54,7 +54,16 @@ getAllPlaces = async(req,res)=>{
                                  
   res.send({success:true,places:category.places})  
 }
-
+getAllTags = async(req,res)=>{
+  const category = await Category
+                        .findById(req.params.id)
+                        .populate({path:"tags",select:["title"]})
+                        .exec()
+                        .catch(err => res.status(404)
+                        .send({succes:false,message:"Category Not found"}));
+                                 
+  res.send({success:true,tags:category.tags})  
+}
 deleteCategory = async (req, res) => {
     Category.findByIdAndDelete({ _id: req.params.id })
     .then((data) => res.json(data))
@@ -64,4 +73,4 @@ deleteCategory = async (req, res) => {
 
   //admin controllers
   
-module.exports = { addCategory, getAllCategoryes, deleteCategory,getAllPlaces };
+module.exports = { addCategory, getAllCategoryes, deleteCategory,getAllPlaces,getAllTags };

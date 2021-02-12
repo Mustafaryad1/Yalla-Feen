@@ -70,7 +70,8 @@ const addPlace = (req, res) => {
 
       console.log(place.location.coordinates);
     }
-
+    // res.send({location:body.location})
+    place.location.coordinates = body.location
     if (req.files) {
       for (item of req.files) {
         place.images.push(placeImageUrl + item.filename);
@@ -330,50 +331,23 @@ const customFilter = async (req, res) => {
 
 const customSearch = async (req, res) => {
   // console.log(req.query);
-  let {category,tag='',city = '',budget = 100,
-       type=['solo','family','couples','friends']} = req.query
-  let _tag = await Tags.find({'title': {'$regex':(tag=='x')?tag:''}})
-  city = (city==='x')?'':city;
-  budget = (budget==='x')?100:budget;
-  type = (type==='x')?['solo','family','couples','friends']:[type];
-  console.log(budget);
-  if(!_tag){
-    _tag = {_id:"601c0abfe834ce2f70c29450"}
-  }
-  console.log(type);
-  budget = parseInt(budget)
-  budget =(budget > 0 )?parseInt(budget):100;
+
+  let {category,type,city,budget,tag}=req.query;
+  const place_category = await Category.findOne({'title':category});
+  // const place_tag = await Tags.findOne({'title':tag});
+  // console.log(place_tag);
+  city = (city=='x')?'':city
+  budget = (budget=='x')?101:budget
   // console.log(budget);
-  const result = await Category
-    .find({
-      'title': category
-    })
-    .populate({
-      path: 'places',
-      match: {
-
-        'city':{'$regex':city},
-        'minBudget':{'$lt':budget},
-        // 'type':{"$in":type}
-      },
-      populate: {
-        path: 'tags',
-        select: "title"
-      }
-    })
-    .exec()
-
-
-
-  if (result.length == 0) {
-    res.send({
-      success: false,
-      message: "Sorry not found yet"
-    })
-  }
-
-  res.send({success: true,message: "founded", data: result})
-
+  const places = await Place.find({'category':place_category._id,
+                                   'type':type,
+                                   'minBudget':{'$lt':budget}},
+                                  
+                                   //  'tags':{"$in":place_tag._id}}
+                                  )
+                            .find({'city':{"$regex":city}})
+                          
+  res.send({places})
 
 }
 // //stash
