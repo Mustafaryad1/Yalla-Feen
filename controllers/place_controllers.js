@@ -99,7 +99,43 @@ const addPlace = (req, res) => {
   })
 };
 
-
+const getRelatedPlaces = async (req, res) => {
+  var query = { category: req.params.id };
+  await Place.find(query).limit(3).populate({
+    path: 'owner',
+    select: 'username'
+  }).populate({
+    path: 'comments',
+    select: 'text',
+    populate: {
+      path: "user",
+      select: "username"
+    }
+  }).populate({
+    path: 'category',
+    select: "title"
+  }).populate({
+    path: 'tags',
+    select: 'title'
+  }).exec((err, places) => {
+    if (err) {
+      return res.status(400).send({
+        success: false,
+        error: err
+      });
+    }
+    if (!places.length) {
+      return res.status(404).send({
+        success: false,
+        error: `Place not found`
+      });
+    }
+    return res.status(200).send({
+      success: true,
+      data: places
+    });
+  });
+};
 
 const getAllPlaces = async (req, res) => {
   var mysort = { title: 1 };  
@@ -176,7 +212,6 @@ const getTopRatedPlaces = async (req, res) => {
     });
   });
 };
-
 
 const getOwnerPlaces = async (req, res) => {
 
@@ -634,6 +669,7 @@ const nearestPlaces = async (req, res) => {
 module.exports = {
   addPlace,
   getAllPlaces,
+  getRelatedPlaces,
   getTopRatedPlaces,
   updatePlace,
   deletePlace,

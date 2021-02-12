@@ -10,6 +10,7 @@ router.get("/details/:id",placeControllers.getPlaceDetails);
 router.get("/place-title/:title",placeControllers.placeSearch);
 router.get("/find/:category/:tagTitle",placeControllers.customFilter);
 router.get("/search",placeControllers.customSearch);
+router.get("/related/:id", placeControllers.getRelatedPlaces);
 router.post("/nearest",placeControllers.nearestPlaces);
 
 // only host and admin
