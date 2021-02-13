@@ -355,7 +355,7 @@ const customSearch = async (req, res) => {
 //   // console.log('im in place details');
 
 //   const result = await Place.findOne({:req.params.rating}).populate({
-//     path:'comments',
+//     path:'comments', 
 //     select:['text','createdAt'],
 //     populate:{
 //         path:"user",

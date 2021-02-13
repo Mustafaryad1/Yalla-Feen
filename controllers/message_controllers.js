@@ -16,7 +16,9 @@ exports.createMessage = (req, res) => {
       error: err
     });
   }
-  message.user = req.user._id;
+  
+  // message.user = req.user._id;
+  
   message
     .save()
     .then((message) => {
@@ -37,46 +39,15 @@ exports.createMessage = (req, res) => {
 
 exports.getMessages = async (req, res) => {
 
-  const messages = await Comment.find({
-    user: req.user._id
-  }).populate({
-    path: 'user',
-    select: 'username'
-  }).exec()
-  res.send({
-    messages
-  })
+  const messages = await Message.find({})
+  res.send({messages})
 }
 
 exports.deleteMessage = async (req, res) => {
   const message_id = req.params.id;
-  try {
-    const message = await Message.findById(message_id);
-    if (req.user._id.toString() === message.user.toString()) {
-      await Message.findByIdAndDelete({
-          _id: message_id
-        })
-        .then(data => res.send({
-          success: true,
-          message: "Message has been deleted"
-        }))
-        .catch(err => res.send({
-          err
-        }))
-    } else {
-      res.send({
-        baduser: "this is not your message"
-      })
-    }
-    res.send({
-        message
-    })
-  } catch (err) {
-    res.status(404).send({
-      success: false,
-      message: "Message not found"
-    })
-  }
+  Message.findByIdAndDelete(message_id)
+         .then(data => res.send({success:true,message:"message has been deleted"}))
+         .catch(err => res.send({success:false,err}))
 }
 
 //admin controllers
