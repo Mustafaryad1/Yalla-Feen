@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const placeControllers = require("../controllers/place_controllers");
-const {requireAuth,checkPlaceOwner} =  require('../middleware/authMiddleware');
+const {requireAuth,checkPlaceOwner, grantAccess} =  require('../middleware/authMiddleware');
 
 
 // puplic user
@@ -16,6 +16,7 @@ router.post("/nearest",placeControllers.nearestPlaces);
 // only host and admin
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces); 
 router.post("/create", requireAuth,placeControllers.addPlace);
+router.post("/approve/:id", requireAuth,grantAccess('updateAny','place'),placeControllers.approvePlace);
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace); //need admin[done] 
 router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace); // need admin[done]
 

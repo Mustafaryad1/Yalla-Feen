@@ -73,6 +73,10 @@ const PlaceSchema = new Schema(
     phone: { 
       type: String 
     },
+    isApproved:{
+      type:Boolean,
+      default:false
+    },
     images: [{ type: String}],
     
     // reviews: [

@@ -141,7 +141,7 @@ const getRelatedPlaces = async (req, res) => {
 const getAllPlaces = async (req, res) => {
   const {skip=0,limit=0} = req.query
   console.log(skip,limit);
-  await Place.find({}).skip(parseInt(skip)).limit(parseInt(limit)).populate({
+  await Place.find({'isApproved':true}).skip(parseInt(skip)).limit(parseInt(limit)).populate({
     path: 'owner',
     select: 'username'
   }).populate({
@@ -632,6 +632,10 @@ const nearestPlaces = async (req, res) => {
     })
 }
 
+const approvePlace =  async(req,res) =>{
+  const data = await Place.updateOne({'_id':req.params.id},{'isApproved':true})
+  res.send({data})
+}
 
 module.exports = {
   addPlace,
@@ -648,5 +652,6 @@ module.exports = {
   nearestPlaces,
   placeSearch,
   customFilter,
-  customSearch
+  customSearch,
+  approvePlace
 };
