@@ -28,8 +28,10 @@ const addFavorite = async (req,res)=>{
 
 
 const getUserFavorites = async(req,res)=>{
-
-  const user = await User.findById(req.user.id).populate({path:"favorite_places",select:"title"}).exec();
+  const {skip=0,limit=0} = req.query
+  const user = await User.findById(req.user.id)
+                         .skip(parseInt(skip)).limit(parseInt(limit))
+                         .populate({path:"favorite_places",select:"title"}).exec();
   res.send({favorites_places:user.favorite_places})
 
 };

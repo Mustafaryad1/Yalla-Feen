@@ -36,10 +36,12 @@ exports.createComment = (req, res) => {
 }
 
 exports.getUserComments = async (req, res) => {
-
+  const {skip=0,limit=0} = req.query
   const comments = await Comment.find({
     user: req.user._id
-  }).populate({
+  })
+  .skip(parseInt(skip)).limit(parseInt(limit))
+  .populate({
     path: 'user',
     select: 'username'
   }).exec()

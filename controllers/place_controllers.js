@@ -179,7 +179,8 @@ const getAllPlaces = async (req, res) => {
 
 const getTopRatedPlaces = async (req, res) => {
   var mysort = { rates: -1 };  
-  await Place.find({}).sort(mysort).populate({
+  const {skip=0,limit=0} = req.query
+  await Place.find({}).sort(mysort).skip(parseInt(skip)).limit(parseInt(limit)).populate({
     path: 'owner',
     select: 'username'
   }).populate({
@@ -258,6 +259,7 @@ const getPlaceDetails = async (req, res) => {
 
 const placeSearch = async (req, res) => {
   // console.log('im in place details');
+  const {skip=0,limit=0} = req.query
   title = req.params.title.toLowerCase();
   const result = await Place.findOne({
     'title': {
@@ -347,8 +349,9 @@ const customSearch = async (req, res) => {
                                    //  'tags':{"$in":place_tag._id}}
                                   )
                             .find({'city':{"$regex":city}})
+                            .skip(parseInt(skip)).limit(parseInt(limit))
                           
-  res.send({places})
+  res.send({success:true,places})
 
 }
 // //stash

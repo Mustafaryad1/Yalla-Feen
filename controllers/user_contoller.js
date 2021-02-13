@@ -42,7 +42,9 @@ const handleErrors = (err) => {
 
 // get users
 module.exports.get_users = async(req,res)=>{
-  const users = await User.find({});
+  const {skip=0,limit=0} = req.query
+  const users = await User.find({})
+                          .skip(parseInt(skip)).limit(parseInt(limit));
   res.send({usersData:users})
 }
 // -----------------------admin routes -----------------------

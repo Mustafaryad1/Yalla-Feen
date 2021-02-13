@@ -38,8 +38,9 @@ exports.createMessage = (req, res) => {
 }
 
 exports.getMessages = async (req, res) => {
-
+  const {skip=0,limit=0} = req.query
   const messages = await Message.find({})
+                                .skip(parseInt(skip)).limit(parseInt(limit))
   res.send({messages})
 }
 
