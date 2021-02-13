@@ -21,7 +21,7 @@ const favorite_routes= require('./routes/favorite_routes');
 const tags_routes= require('./routes/tags_routes');
 const rating_routes= require('./routes/rating_routes');
 const message_routes= require('./routes/message_routes');
-
+const advertise_routes = require('./routes/advertise _routes');
 
 // config express app
 const app = express();
@@ -37,6 +37,7 @@ app.use(express.static('uploads'));
 app.use('/user-images', express.static(__dirname + '/uploads/user'));
 // place Images
 app.use('/place-images', express.static(__dirname + '/uploads/place'));
+app.use('/ads-images', express.static(__dirname + '/uploads/ads'));
 
 
 //------------------------------------------
@@ -61,6 +62,7 @@ app.use('/favorite',favorite_routes);
 app.use('/tag',tags_routes);
 app.use('/rating',rating_routes);
 app.use('/message',message_routes);
+app.use('/advertise',advertise_routes);
 
 
 const lang_lat_search = require('./utils/egypt_city_lang_lat').search

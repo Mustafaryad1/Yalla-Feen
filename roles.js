@@ -22,11 +22,11 @@ ac.grant("admin")
  .readAny("users")
  .readAny('comments')
  .readAny('messages')
- .readAny('advertise')
  .deleteAny('message')
- .deleteAny('advertise')
  .readAny('rating')
  .updateAny("admin")
+ .deleteAny('advertise')
+ .createAny('advertise')
  .updateAny("advertise")
  
 

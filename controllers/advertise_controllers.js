@@ -1,143 +1,71 @@
-// joi 
-
-const PlaceAdsAds = require("../models/advertise _model");
-const Category = require("../models/category_model");
+const Advertise = require("../models/advertise _model");
 const upload = require("../middleware/upload").upload;
-const placeAdsImageUrl = require('dotenv').config().parsed.PLACEAdsIMAGESURL;
+const AdsImageUrl = require('dotenv').config().parsed.ADSIMAGESURL;
 
-const Nominatim = require('nominatim-geocoder');
-const { Mongoose } = require("mongoose");
-const geocoder = new Nominatim()
 
-const createPlaceAds = (req, res) => {
-  upload.array('images', 12)(req, res, async function (err) {
+const createAds = (req, res) => {
+  upload.single('image')(req, res, async function (err) {
     if (err) {
       return res.status(400).send({
         success: false,
         message: "allowed files are images and size 2mb and max-files 12 image"
       })
     }
-
     const body = JSON.parse(JSON.stringify(req.body));
-
     if (!body) {
       return res.status(400).json({
         success: false,
-        error: "You must add placeAds",
+        error: "You must add advertise",
       });
     }
     // console.log(req.files);
-    const category = await Category.findOne({
-      'title': body.category
-    })
-    if (!category) {
-      res.send({
-        success: false,
-        error: "category not found"
-      })
-    }
-    body.category = category._id
-
-    const placeAds = new PlaceAds(body);
-    if (!placeAds) {
+  
+    const advertise = new Advertise(body);
+    if (!advertise) {
       return res.status(400).json({
         success: false,
         error: err
       });
     }
-    if (!body.location) {
-      await geocoder.search({
-          q: placeAds.title
-        })
-        .then((response) => {
-          // data =  
-          console.log(response);
-          placeAds.location.coordinates = [parseFloat(response[0].lon),
-            parseFloat(response[0].lat)
-          ]
-        })
-        .catch((error) => {
-          err = error;
-        })
-
-      console.log(placeAds.location.coordinates);
-    }
+    
     // res.send({location:body.location})
-    placeAds.location.coordinates = body.location
-    if (req.files) {
-      for (item of req.files) {
-        placeAds.images.push(placeAdsImageUrl + item.filename);
-      }
+  
+    if (req.file) {
+      advertise.image =AdsImageUrl+req.file.filename
     }
-    console.log(placeAds);
+    // console.log(advertise);
 
-    placeAds.owner = req.user._id;
-    placeAds
+    advertise
       .save()
       .then(async (data) => {
-        category.placeAdss.push(data._id);
-        await category.save()
         return res.status(200).json({
           success: true,
-          id: placeAds._id,
-          message: "PlaceAds item created",
+          id: advertise._id,
+          message: "advertise item created",
         });
       })
       .catch((error) => {
         return res.status(400).json({
           error,
-          message: "PlaceAds item not created",
+          message: "advertise item not created",
         });
       })
   })
 };
 
-const getAllPlaceAds = async (req, res) => {
-  var mysort = { title: 1 };  
-  await PlaceAds.find({}).sort(mysort).populate({
-    path: 'owner',
-    select: 'username'
-  }).populate({
-    path: 'comments',
-    select: 'text',
-    populate: {
-      path: "user",
-      select: "username"
-    }
-  }).populate({
-    path: 'category',
-    select: "title"
-  }).populate({
-    path: 'tags',
-    select: 'title'
-  }).exec((err, placeAdss) => {
-    if (err) {
-      return res.status(400).send({
-        success: false,
-        error: err
-      });
-    }
-    if (!placeAdss.length) {
-      return res.status(404).send({
-        success: false,
-        error: `PlaceAds not found`
-      });
-    }
-    return res.status(200).send({
-      success: true,
-      data: placeAdss
-    });
-  });
+const getAllAds = async (req, res) => {
+  const ads = await Advertise.find({})
+  res.send({success:true,ads})
 };
 
-const updatePlaceAds = async (req, res) => {
+const updateAds = async (req, res) => {
 
-  await PlaceAds.findByIdAndUpdate(
+  await advertise.findByIdAndUpdate(
     req.params.id,
     req.body, {
       new: true
     },
-    (err, placeAds) => {
+    (err, advertise) => {
       if (err) {
         return res.status(500).send({
           success: false,
@@ -146,15 +74,15 @@ const updatePlaceAds = async (req, res) => {
       }
       res.send({
         success: true,
-        message: placeAds
+        message: advertise
       })
     }
   )
-  res.send(req.placeAds);
+  res.send(req.advertise);
 };
 
-const deletePlaceAds = (req, res) => {
-  PlaceAdsAds.findByIdAndDelete(req.params.id)
+const deleteAds = (req, res) => {
+  Advertise.findByIdAndDelete(req.params.id)
     .then((data) => {
       if (!data) {
         res.send({
@@ -178,8 +106,8 @@ const deletePlaceAds = (req, res) => {
 
 
 module.exports = {
-  createPlaceAds,
-  getAllPlaceAds,
-  updatePlaceAds,
-  deletePlaceAds
+  createAds,
+  getAllAds,
+  updateAds,
+  deleteAds
 };
