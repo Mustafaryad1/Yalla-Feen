@@ -139,8 +139,9 @@ const getRelatedPlaces = async (req, res) => {
 };
 
 const getAllPlaces = async (req, res) => {
-  var mysort = { title: 1 };  
-  await Place.find({}).sort(mysort).populate({
+  const {skip=0,limit=0} = req.query
+  console.log(skip,limit);
+  await Place.find({}).skip(parseInt(skip)).limit(parseInt(limit)).populate({
     path: 'owner',
     select: 'username'
   }).populate({
