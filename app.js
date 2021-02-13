@@ -20,7 +20,7 @@ const category_routes = require('./routes/category_routes');
 const favorite_routes= require('./routes/favorite_routes');
 const tags_routes= require('./routes/tags_routes');
 const rating_routes= require('./routes/rating_routes');
-
+const message_routes= require('./routes/message_routes');
 
 
 // config express app
@@ -60,6 +60,7 @@ app.use('/category',category_routes);
 app.use('/favorite',favorite_routes);
 app.use('/tag',tags_routes);
 app.use('/rating',rating_routes);
+app.use('/message',message_routes);
 
 // test joi
 // const validation_body = require('./middleware/validationBody')
