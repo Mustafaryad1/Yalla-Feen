@@ -45,7 +45,7 @@ const addPlace = (req, res) => {
       })
     }
     body.category = category._id
-
+    body.isApproved = false;
     const place = new Place(body);
     if (!place) {
       return res.status(400).json({
