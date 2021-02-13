@@ -21,6 +21,8 @@ ac.grant("admin")
  .deleteAny("tag")
  .readAny("users")
  .readAny('comments')
+ .readAny('messages')
+ .deleteAny('message')
  .readAny('rating')
  .updateAny("admin")
  

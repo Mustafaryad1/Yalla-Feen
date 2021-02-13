@@ -139,8 +139,9 @@ const getRelatedPlaces = async (req, res) => {
 };
 
 const getAllPlaces = async (req, res) => {
-  var mysort = { title: 1 };  
-  await Place.find({}).sort(mysort).populate({
+  const {skip=0,limit=0} = req.query
+  console.log(skip,limit);
+  await Place.find({}).skip(parseInt(skip)).limit(parseInt(limit)).populate({
     path: 'owner',
     select: 'username'
   }).populate({
@@ -355,7 +356,7 @@ const customSearch = async (req, res) => {
 //   // console.log('im in place details');
 
 //   const result = await Place.findOne({:req.params.rating}).populate({
-//     path:'comments',
+//     path:'comments', 
 //     select:['text','createdAt'],
 //     populate:{
 //         path:"user",

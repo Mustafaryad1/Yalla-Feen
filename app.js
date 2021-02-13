@@ -62,13 +62,7 @@ app.use('/tag',tags_routes);
 app.use('/rating',rating_routes);
 app.use('/message',message_routes);
 
-// test joi
-// const validation_body = require('./middleware/validationBody')
-// const test = require('./validation-schema/tset')
-// app.post('/test',validation_body(test.UserScehma),(req,res)=>{
-//   console.log('/update'); 
-//   res.json(req.body);
-// })
+
 const lang_lat_search = require('./utils/egypt_city_lang_lat').search
 
 app.post('/test',(req,res) => {
