@@ -44,6 +44,14 @@ getAllCategoryes = async (req, res) => {
   }).catch((err) => console.log(err));
 };
 
+getCategory = async (req, res) => {
+  const category = await Category.findOne({'_id':req.params.id}).catch(err=> 
+    res.status(404).send({sucess:false,message:"category not found"}))
+                          
+  res.send({success:true,category:category})
+};
+
+
 getAllPlaces = async(req,res)=>{
   const category = await Category
                         .findById(req.params.id)
@@ -73,4 +81,4 @@ deleteCategory = async (req, res) => {
 
   //admin controllers
   
-module.exports = { addCategory, getAllCategoryes, deleteCategory,getAllPlaces,getAllTags };
+module.exports = { addCategory, getAllCategoryes, deleteCategory,getAllPlaces,getAllTags,getCategory };

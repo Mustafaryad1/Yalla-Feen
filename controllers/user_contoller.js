@@ -47,6 +47,14 @@ module.exports.get_users = async(req,res)=>{
                           .skip(parseInt(skip)).limit(parseInt(limit));
   res.send({usersData:users})
 }
+// get users
+module.exports.get_user = async(req,res)=>{
+  
+  const user = await User.findOne({'_id':req.params.id}).catch(err=> 
+    res.status(404).send({sucess:false,message:"User not found"}))
+                          
+  res.send({success:true,user:user})
+}
 // -----------------------admin routes -----------------------
 // give permission 
 module.exports.givePermission  = async(req,res) =>{

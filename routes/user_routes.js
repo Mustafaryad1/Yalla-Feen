@@ -19,6 +19,7 @@ router.put('/edit-profile',requireAuth,authController.editProfile); //admin
 // admin routes
 
 router.get('/list',requireAuth,grantAccess('readAny','users'),authController.get_users); //admin
+router.get('/details/:id',requireAuth,grantAccess('readAny','users'),authController.get_user); //admin
 router.put('/give-permission/:user_id',requireAuth,grantAccess('updateAny','admin'),authController.givePermission) //admin
 router.delete('/delete/:user_id',requireAuth,grantAccess('deleteAny','profile'),authController.deleteUser)
 // reset password
