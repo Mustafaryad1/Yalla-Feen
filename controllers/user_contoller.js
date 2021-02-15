@@ -55,6 +55,21 @@ module.exports.get_user = async(req,res)=>{
                           
   res.send({success:true,user:user})
 }
+
+module.exports.search = async(req,res)=>{
+  const {username,email}=req.query;
+  let user ;
+  if(username){
+    user = await User.find({'username':{"$regex":username}}).catch(err=> 
+    res.status(404).send({sucess:false,message:"User not found"}))
+  }else if(email){
+    user = await User.find({'email':{"$regex":email}}).catch(err=> 
+      res.status(404).send({sucess:false,message:"User not found"}))
+  }else{
+    res.send({success:false,message:"you should search by username or email"})
+  }               
+  res.send({success:true,user:user})
+}
 // -----------------------admin routes -----------------------
 // give permission 
 module.exports.givePermission  = async(req,res) =>{
