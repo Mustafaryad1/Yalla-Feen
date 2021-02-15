@@ -349,7 +349,7 @@ const customSearch = async (req, res) => {
                                    //  'tags':{"$in":place_tag._id}}
                                   )
                             .find({'city':{"$regex":city}})
-                            .skip(parseInt(skip)).limit(parseInt(limit))
+                            // .skip(parseInt(skip)).limit(parseInt(limit))
                           
   res.send({success:true,places})
 
@@ -397,13 +397,17 @@ const updatePlace = async (req, res) => {
 
 const deletePlace = (req, res) => {
   Place.findByIdAndDelete(req.params.id)
-    .then((data) => {
+    .then(async(data) => {
       if (!data) {
         res.send({
           succes: false,
           message: "place not found"
         })
       }
+      await Comment.remove({'_id':{'$in':data.comments}})
+      await Rating.remove({'_id':{'$in':data.rating}})
+      // await User.remove({'_id':{'$in':data.rating}})
+
       res.send({
         succes: true,
         message: `${data.title} place deleted`,
@@ -636,6 +640,10 @@ const approvePlace =  async(req,res) =>{
   const data = await Place.updateOne({'_id':req.params.id},{'isApproved':true})
   res.send({data})
 }
+const needApprove =  async(req,res) =>{
+  const data = await Place.find({'isApproved':false})
+  res.send({data})
+}
 
 module.exports = {
   addPlace,
@@ -653,5 +661,6 @@ module.exports = {
   placeSearch,
   customFilter,
   customSearch,
-  approvePlace
+  approvePlace,
+  needApprove
 };

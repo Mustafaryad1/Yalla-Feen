@@ -119,7 +119,7 @@ module.exports.login_post = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    res.status(200).json({ role: user.role ,token:user.generateJWT()});
+    res.status(200).json({ role: user.role ,token:user.generateJWT(),username:user.username});
   }
   catch (err) {
     // const errors = handleErrors(err);

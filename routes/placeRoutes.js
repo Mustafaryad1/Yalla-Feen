@@ -17,6 +17,7 @@ router.post("/nearest",placeControllers.nearestPlaces);
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces); 
 router.post("/create", requireAuth,placeControllers.addPlace);
 router.post("/approve/:id", requireAuth,grantAccess('updateAny','place'),placeControllers.approvePlace);
+router.get("/need-approve", requireAuth,grantAccess('readAny','place'),placeControllers.needApprove);
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace); //need admin[done] 
 router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace); // need admin[done]
 
