@@ -50,6 +50,21 @@ exports.getUserComments = async (req, res) => {
   })
 }
 
+exports.getComments = async (req, res) => {
+  const {skip=0,limit=0} = req.query
+  const comments = await Comment.find({
+   
+  })
+  .skip(parseInt(skip)).limit(parseInt(limit))
+  .populate({
+    path: 'user',
+    select: 'username'
+  }).exec()
+  res.send({
+    comments
+  })
+}
+
 exports.updateComment = async (req, res) => {
   const comment_id = req.params.id;
   try {
