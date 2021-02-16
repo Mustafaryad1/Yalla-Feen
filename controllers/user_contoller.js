@@ -233,10 +233,19 @@ module.exports.resetPasswordWithToken = async(req,res) =>{
 
 module.exports.aggregate_users = async(req,res)=>{
  const userdata =  await User.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
+ const activeUsers =  await User.aggregate([{$group:{_id:"$isactive",total:{$sum:1}}}])
  const placedata =  await Place.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
+ const approvedPlaces =  await Place.aggregate([{$group:{_id:"$isApproved",total:{$sum:1}}}])
  const topPlaces = await Place.find({}).sort([['favorites_count',-1]]).limit(3).exec();
-//  console.log(topPlaces);
+
+//  console.log(activeUsers);
 // console.log(placedata);
-  res.send({userCountGraph:userdata,placeCountGraph:placedata,topPlaces});
+  res.send({
+            userCountGraph:userdata,
+            placeCountGraph:placedata,
+            topPlaces,
+            approvedPlaces,
+            activeUsers
+            });
 }
 //admin controllers
