@@ -1,4 +1,5 @@
 const User = require("../models/user_model");
+const Place = require("../models/place_model");
 const jwt = require('jsonwebtoken');
 const userImagesURL = require('dotenv').config().parsed.USERIMAGESURL
 const upload = require('../middleware/upload').upload
@@ -230,4 +231,12 @@ module.exports.resetPasswordWithToken = async(req,res) =>{
 
 }
 
+module.exports.aggregate_users = async(req,res)=>{
+ const userdata =  await User.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
+ const placedata =  await Place.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
+ const topPlaces = await Place.find({}).sort([['favorites_count',-1]]).limit(3).exec();
+//  console.log(topPlaces);
+// console.log(placedata);
+  res.send({userCountGraph:userdata,placeCountGraph:placedata,topPlaces});
+}
 //admin controllers
