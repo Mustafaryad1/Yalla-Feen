@@ -335,8 +335,16 @@ const customFilter = async (req, res) => {
 const customSearch = async (req, res) => {
   // console.log(req.query);
 
-  let {category,type,city='',budget=101,tag=''}=req.query;
-  // const place_category = await Category.findOne({'title':{'$regex':category}});
+  let {category='',type='family',city='',budget=101,tag=''}=req.query;
+  let place_category = await Category.findOne({'title':category}).catch(err=> res.send(err));
+  if(!place_category){
+    place_category = await Category.findOne({title:{'$regex':''}}).catch(err=>res.send(err));
+  }  
+  let place_tag = await Tags.findOne({'title':tag}).catch(err=> res.send(err));
+  if(!place_tag){
+    place_tag = await Category.findOne({title:{'$regex':''}}).catch(err=>res.send(err));
+  }
+
   // console.log(place_category);
   // // const place_tag = await Tags.findOne({'title':tag});
   // // console.log(place_tag);
@@ -347,6 +355,7 @@ const customSearch = async (req, res) => {
   }else{
   budget = parseInt(budget)
   }
+  // console.log(budget);
   // // console.log(budget);
   // const places = await Place.find({'category':place_category._id,
   //                                  'type':type,
@@ -356,12 +365,17 @@ const customSearch = async (req, res) => {
   //                                 )
   //                           // .find({'city':{"$regex":city}})
   //                           // .skip(parseInt(skip)).limit(parseInt(limit))
-   const places = await Place.find({'type':type,
+   const places = await Place.find({
+                                    'category':place_category._id,
+                                    'type':type,
                                     'minBudget':{'$lt':budget},
-                                    'city':{"$regex":city}
-                           }).populate({path:'category',match:{title:{'$regex':category}}})
-                             .populate({path:'tags',match:{title:{'$regex':tag}}})
-                             .exec()
+                                    'city':{"$regex":city},
+                                    'tags':{"$in":place_tag._id}
+
+                           })
+                           .populate({path:'category',select:'title'})
+                           .populate({path:'tags',select:'title'})
+                           .exec()
                        
   res.send({success:true,places})
 
