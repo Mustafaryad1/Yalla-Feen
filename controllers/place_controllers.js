@@ -69,17 +69,21 @@ const addPlace = (req, res) => {
         })
 
       console.log(place.location.coordinates);
-    }
+      }else{
+
+        place.location.coordinates = body.location
+      }
     // res.send({location:body.location})
-    place.location.coordinates = body.location
     if (req.files) {
       for (item of req.files) {
+        // console.log(item);
         place.images.push(placeImageUrl + item.filename);
       }
     }
-    console.log(place);
+    // console.log(place);
 
     place.owner = req.user._id;
+    // console.log(place.owner);
     place
       .save()
       .then(async (data) => {
@@ -101,7 +105,7 @@ const addPlace = (req, res) => {
 };
 
 const getRelatedPlaces = async (req, res) => {
-  var query = { category: req.params.id };
+  var query = { category: req.params.id,'isApproved':true };
   await Place.find(query).limit(3).populate({
     path: 'owner',
     select: 'username'
