@@ -180,7 +180,7 @@ const getAllPlaces = async (req, res) => {
 const getTopRatedPlaces = async (req, res) => {
   var mysort = { rates: -1 };  
   const {skip=0,limit=0} = req.query
-  await Place.find({}).sort(mysort).skip(parseInt(skip)).limit(parseInt(limit)).populate({
+  await Place.find({'isApproved':true}).sort(mysort).skip(parseInt(skip)).limit(parseInt(limit)).populate({
     path: 'owner',
     select: 'username'
   }).populate({
@@ -218,7 +218,7 @@ const getTopRatedPlaces = async (req, res) => {
 
 const getOwnerPlaces = async (req, res) => {
 
-  await Place.find({
+  await Place.find({'isApproved':true,
     'owner': req.user._id
   }, (err, places) => {
     // console.log(req.user._id);
@@ -345,7 +345,7 @@ const customSearch = async (req, res) => {
     place_tag = await Category.findOne({title:{'$regex':''}}).catch(err=>res.send(err));
   }
 
-  // console.log(place_category);
+  console.log(place_category);
   // // const place_tag = await Tags.findOne({'title':tag});
   // // console.log(place_tag);
   // console.log(req.query);
@@ -365,7 +365,7 @@ const customSearch = async (req, res) => {
   //                                 )
   //                           // .find({'city':{"$regex":city}})
   //                           // .skip(parseInt(skip)).limit(parseInt(limit))
-   const places = await Place.find({
+   const places = await Place.find({'isApproved':true,
                                     'category':place_category._id,
                                     'type':type,
                                     'minBudget':{'$lt':budget},
