@@ -335,22 +335,34 @@ const customFilter = async (req, res) => {
 const customSearch = async (req, res) => {
   // console.log(req.query);
 
-  let {category,type,city,budget,tag}=req.query;
-  const place_category = await Category.findOne({'title':category});
-  // const place_tag = await Tags.findOne({'title':tag});
-  // console.log(place_tag);
-  city = (city=='x')?'':city
-  budget = (budget=='x')?101:budget
-  // console.log(budget);
-  const places = await Place.find({'category':place_category._id,
-                                   'type':type,
-                                   'minBudget':{'$lt':budget}},
+  let {category,type,city='',budget=101,tag=''}=req.query;
+  // const place_category = await Category.findOne({'title':{'$regex':category}});
+  // console.log(place_category);
+  // // const place_tag = await Tags.findOne({'title':tag});
+  // // console.log(place_tag);
+  // console.log(req.query);
+  city = (city=='x')?'':city;
+  if(!parseInt(budget)){
+    budget = 500
+  }else{
+  budget = parseInt(budget)
+  }
+  // // console.log(budget);
+  // const places = await Place.find({'category':place_category._id,
+  //                                  'type':type,
+  //                                  'minBudget':{'$lt':budget}},
                                   
-                                   //  'tags':{"$in":place_tag._id}}
-                                  )
-                            .find({'city':{"$regex":city}})
-                            // .skip(parseInt(skip)).limit(parseInt(limit))
-                          
+  //                                  //  'tags':{"$in":place_tag._id}}
+  //                                 )
+  //                           // .find({'city':{"$regex":city}})
+  //                           // .skip(parseInt(skip)).limit(parseInt(limit))
+   const places = await Place.find({'type':type,
+                                    'minBudget':{'$lt':budget},
+                                    'city':{"$regex":city}
+                           }).populate({path:'category',match:{title:{'$regex':category}}})
+                             .populate({path:'tags',match:{title:{'$regex':tag}}})
+                             .exec()
+                       
   res.send({success:true,places})
 
 }
