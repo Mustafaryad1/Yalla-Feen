@@ -231,21 +231,47 @@ module.exports.resetPasswordWithToken = async(req,res) =>{
 
 }
 
-module.exports.aggregate_users = async(req,res)=>{
+module.exports.create_users = async(req,res)=>{
+  const user = new User(req.body)
+  console.log(req.body.password);
+  try{
+  user.setPassword(req.body.password)
+  }catch(err){
+    res.send({password:"enter vaild password"})
+  }
+  await user.save().catch(err=> res.send({err}))
+  res.send({data:req.body})
+}
+
+module.exports.panUser = async(req,res)=>{
+  let user = await User.findOne({'_id':req.params.user_id})
+      user.isactive = !user.isactive;
+      await user.save()
+  let active = (user.isactive)?"actived":"panned"
+  
+  res.send({success:true,message:`${user.username} has became ${active}`})
+
+}
+
+module.exports.aggregate_data = async(req,res)=>{
  const userdata =  await User.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
  const activeUsers =  await User.aggregate([{$group:{_id:"$isactive",total:{$sum:1}}}])
  const placedata =  await Place.aggregate([{$group:{_id:"$city",total:{$sum:1}}}])
  const approvedPlaces =  await Place.aggregate([{$group:{_id:"$isApproved",total:{$sum:1}}}])
  const topPlaces = await Place.find({}).sort([['favorites_count',-1]]).limit(3).exec();
+ const countPlaces = await Place.count({})
+ const countUsers = await User.count({})
 
-//  console.log(activeUsers);
+//  console.log(countPlaces);
+//  console.log(countUsers);
 // console.log(placedata);
   res.send({
             userCountGraph:userdata,
             placeCountGraph:placedata,
             topPlaces,
             approvedPlaces,
-            activeUsers
+            activeUsers,
+            counts:{countPlaces,countUsers}
             });
 }
 //admin controllers
