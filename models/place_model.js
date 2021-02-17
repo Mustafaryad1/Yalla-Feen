@@ -58,10 +58,10 @@ const PlaceSchema = new Schema(
       ref:"Tags"
     }],
     workStart: {
-      type: Date 
+      type: Number 
     },
     workEnd: { 
-      type: Date 
+      type: Number 
     },
     city: {
       type:String,
