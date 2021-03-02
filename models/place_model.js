@@ -1,3 +1,4 @@
+const { number } = require("joi");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -58,10 +59,10 @@ const PlaceSchema = new Schema(
       ref:"Tags"
     }],
     workStart: {
-      type: Date 
+      type: Number 
     },
     workEnd: { 
-      type: Date 
+      type: Number
     },
     city: {
       type:String,
@@ -74,6 +75,10 @@ const PlaceSchema = new Schema(
       type: String 
     },
     isApproved:{
+      type:Boolean,
+      default:false
+    },
+    isAdvertise:{
       type:Boolean,
       default:false
     },

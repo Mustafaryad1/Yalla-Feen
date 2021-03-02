@@ -13,11 +13,14 @@ router.get("/search",placeControllers.customSearch);
 router.get("/related/:id", placeControllers.getRelatedPlaces);
 router.post("/nearest",placeControllers.nearestPlaces);
 
-// only host and admin
 router.get("/my-places",requireAuth,placeControllers.getOwnerPlaces); 
 router.post("/create", requireAuth,placeControllers.addPlace);
+router.post("/add-images/:id", requireAuth,placeControllers.addImages);
+// only host and admin
 router.post("/approve/:id", requireAuth,grantAccess('updateAny','place'),placeControllers.approvePlace);
 router.get("/need-approve", requireAuth,grantAccess('readAny','place'),placeControllers.needApprove);
+router.get("/ads", requireAuth,grantAccess('readAny','place'),placeControllers.getAds);
+router.put("/manage-ad/:id", requireAuth,grantAccess('updateAny','advertise'),placeControllers.manageAds);
 router.put("/update/:id",requireAuth,checkPlaceOwner,placeControllers.updatePlace); //need admin[done] 
 router.delete("/delete/:id",requireAuth,checkPlaceOwner,placeControllers.deletePlace); // need admin[done]
 

@@ -670,9 +670,58 @@ const approvePlace =  async(req,res) =>{
   const data = await Place.updateOne({'_id':req.params.id},{'isApproved':true})
   res.send({data})
 }
+const manageAds =  async(req,res) =>{
+  const place = await Place.findOne({'_id':req.params.id});
+  place.isAdvertise = !place.isAdvertise;
+  await place.save()
+  let ad = (place.isAdvertise)?"ad":"normal place"
+  
+  res.send({success:true,message:`${place.title} has became ${ad}`})
+
+}
 const needApprove =  async(req,res) =>{
   const data = await Place.find({'isApproved':false})
   res.send({data})
+}
+const getAds = async(req,res) =>{
+  const ads = await Place.find({'isAdvertise':true})
+  res.send({ads})
+}
+
+const addImages = (req,res)=>{
+  upload.array('images', 12)(req,res,async (err)=>{
+    if(err){
+      return res.status(400).send({
+        success: false,
+        message: "allowed files are images and size 2mb and max-files 12 image"
+      })
+    }
+    let place = null;
+    try{
+     place = await Place.findOne({'_id':req.params.id})
+    }catch(err){
+      res.status(401).send({success:false,message:"Place does not exist!"})
+    }
+    // console.log(place);
+    if(place){
+      if (req.files) {
+        for (item of req.files) {
+          // console.log(item);
+          place.images.push(placeImageUrl + item.filename);
+        }
+        place.save().then(data =>{
+          res.send({succes:true})
+        }
+        )
+      } else{
+        res.status(401).send({success:false})
+      }
+    }else{
+      res.status().send({success:false,message:"Place does not exist!"})
+    }
+    
+  })
+    
 }
 
 module.exports = {
@@ -692,5 +741,8 @@ module.exports = {
   customFilter,
   customSearch,
   approvePlace,
-  needApprove
+  needApprove,
+  manageAds,
+  getAds,
+  addImages
 };
